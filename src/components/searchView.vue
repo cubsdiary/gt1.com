@@ -1,7 +1,7 @@
 <template>
   <div class="search-view">
     <div class="search">
-      <input type="text" placeholder="请输入。。。" class="search-input">
+      <input type="text" placeholder="请输入GT1号或关键字" class="search-input">
       <button type="button" name="button" class="search-btn">搜索</button>
     </div>
   </div>

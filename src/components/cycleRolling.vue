@@ -2,8 +2,11 @@
   <div class="cycle-rolling" @mouseenter.prevent="mouseover" @mouseleave.prevent="mouseleave" ref="cycleRoll">
     <ul ref="cycleList" :style="scrollType ? 'width:' + scrollSize + 'px' : 'height:' + scrollSize + 'px'">
 
-  		<li ref="cycleItem" v-for="(item, index) in data"><img  src="" :alt="item" width="96" height="96"></li>
-
+  		<li ref="cycleItem" v-for="(item, index) in dataArray">
+        <div class="content">
+          <img :src="item.img" alt="">
+        </div>
+      </li>
   	</ul>
   </div>
 </template>
@@ -11,6 +14,9 @@
 <script>
 export default {
   props: {
+    data: {
+      type: Array
+    },
     // 滚动元素长度是否相等
     isEqual: {
       type: Boolean,
@@ -39,7 +45,7 @@ export default {
   },
   data () {
     return {
-      data: [0,1,2,3,4,5,6,7,8,9,10,11,12],
+      dataArray: [],
       cycleRollDom: null,
       scrollW: null,
       scrollH: null,
@@ -53,6 +59,9 @@ export default {
       scrollSize: 0,
       moveId: null
     }
+  },
+  created () {
+    this.dataArray = this.data.slice()
   },
   mounted () {
     this.init()
@@ -97,23 +106,23 @@ export default {
 
 			//克隆滚动子元素将其插入到滚动元素后，并设定滚动元素宽度
 
-      this.data = this.data.concat(this.data)
+      this.dataArray = this.dataArray.concat(this.dataArray)
       this.scrollSize = this.scrollSize * 2
-      let _self = this
-      this.moveId = setInterval(() => {
-        let numMoved = 0
-        _self.scrollFunc()
-      }, _self.scrollDelay)
+      // let _self = this
+      // this.moveId = setInterval(() => {
+      //   let numMoved = 0
+      //   _self.scrollFunc()
+      // }, _self.scrollDelay)
     },
     scrollFunc () {
 			var _dir = (this.direction === 'left'|| this.direction === 'right') ? 'scrollLeft' : 'scrollTop'
-			// if (this.loop>0) {
-			// 	numMoved+=this.scrollAmount
-			// 	if(numMoved>this.scrollSize*this.loop){
-			// 		this.cycleRollDom[_dir]=0
-			// 		return clearInterval(this.moveId)
-			// 	}
-			// }
+			if (this.loop>0) {
+				numMoved+=this.scrollAmount
+				if(numMoved>this.scrollSize*this.loop){
+					this.cycleRollDom[_dir]=0
+					return clearInterval(this.moveId)
+				}
+			}
 
 			if (this.direction === 'left' || this.direction === 'up'){
 				var newPos = this.cycleRollDom[_dir] + this.scrollAmount
@@ -130,15 +139,20 @@ export default {
 			}
 		},
     mouseover (e) {
-      clearInterval(this.moveId)
+      let _self = this
+      // clearInterval(this.moveId)
+      this.moveId = setInterval(() => {
+        let numMoved = 0
+        _self.scrollFunc()
+      }, _self.scrollDelay)
     },
     mouseleave (e) {
       let _self = this
       clearInterval(this.moveId)
-			this.moveId = setInterval(() => {
-        let numMoved = 0
-        _self.scrollFunc()
-      }, _self.scrollDelay)
+			// this.moveId = setInterval(() => {
+      //   let numMoved = 0
+      //   _self.scrollFunc()
+      // }, _self.scrollDelay)
     }
   },
   beforeDestory () {
@@ -150,19 +164,23 @@ export default {
 <style scoped lang="stylus">
   .cycle-rolling
     width: 100%
-    height: 100px
-    background-color: rgba(255, 123, 0, 0.5)
-    margin: 0 auto
+    height: 136px
+    margin-bottom: 20px
     overflow: hidden
     ul
       list-style: none
       li
         float: left
         box-sizing: border-box
-        width: 100px
-        height: 100px
+        width: 226px
+        height: 136px
         color: #fff
         font-size: 40px
-        img
-          display: block
+        .content
+          width: 220px
+          height: 136px
+          img
+            display: block
+            width: auto
+            height: 100%
 </style>
