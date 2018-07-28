@@ -5,6 +5,7 @@
       <div class="navigation">
         <div class="left">
           <div class="title">搜索列表</div>
+          <i class="icon"></i>
         </div>
         <div class="right">
           <a href="#">订购站点：www.QTYCY.shop.com</a>
@@ -12,7 +13,27 @@
       </div>
       <div class="goodsinfo-tab1">
         <div class="info-left">
-
+          <div class="img-show">
+            <h2>T0-SD6720KK</h2>
+            <img src="big-img" alt="">
+          </div>
+          <ul class="mini-img-list">
+            <li class="mini-img">
+              <img src="" alt="">
+            </li>
+            <li class="mini-img">
+              <img src="" alt="">
+            </li>
+            <li class="mini-img">
+              <img src="" alt="">
+            </li>
+            <li class="mini-img">
+              <img src="" alt="">
+            </li>
+            <li class="mini-img">
+              <img src="" alt="">
+            </li>
+          </ul>
         </div>
         <div class="info-right">
           <div class="info-title">参数详情</div>
@@ -50,10 +71,12 @@
       </div>
       <div class="tab2-title">
         <div class="left-title">
-          产品对应号
+          <span>产品对应号</span>
+          <i class="icon-font-1"></i>
         </div>
         <div class="right-title">
-          适配车型
+          <span>适配车型</span>
+          <i class="icon-font-1"></i>
         </div>
       </div>
       <div class="goodsinfo-tab2">
@@ -130,15 +153,42 @@
           </ul>
         </div>
       </div>
+      <div class="tab3-title">
+        <span>车型匹配</span>
+        <i class="icon-font-1"></i>
+      </div>
+      <ul class="goodsinfo-tab3">
+        <li class="car-brand">
+          <div class="car-title">
+            <img src="" alt="">
+            <span>丰田 TOYUTA</span>
+            <a href="javascript:;" @click="toggleClick">收起</a>
+          </div>
+          <Collapse :show="showType" :data="data"></Collapse>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
 import searchView from '@/components/searchView'
+import Collapse from '@/components/collapse'
 export default {
   components: {
-    searchView
+    searchView,
+    Collapse
+  },
+  data () {
+    return {
+      showType: false,
+      data: [0, 1, 2, 3]
+    }
+  },
+  methods: {
+    toggleClick () {
+      this.showType = !this.showType
+    }
   }
 }
 </script>
@@ -147,6 +197,8 @@ export default {
   .goodsinfo-container
     width: 100%
     overflow: hidden
+    ul
+      list-style: none
     .goodsinfo-content
       width: 1200px
       overflow: hidden
@@ -161,16 +213,25 @@ export default {
         .left
           width: 100px
           height: 30px
-          background-image: url('')
-          background-position: right center
-          background-repeat: no-repeat
+          overflow: hidden
           .title
-            width: 74px
+            display: inline-block
+            box-sizing: border-box
+            width: 73px
             height: 100%
             border-bottom: 1px solid #9e9e9e
             font-size: 18px
             line-height: 24px
             color: #919191
+            margin-right: 14px
+            float: left
+          .icon
+            display: inline-block
+            width: 12px
+            height: 30px
+            background-image: url('../assets/icon.png')
+            background-position: -124px -193px
+            background-repeat: no-repeat
         .right
           flex: 1
           display: flex
@@ -183,19 +244,55 @@ export default {
             color: #707071
             text-decoration: underline
       .goodsinfo-tab1
-        height: 387px
+        height: 385px
         display: flex
         .info-left
           flex: 1
+          display: flex
+          margin-right: 80px
+          .img-show
+            position: relative
+            width: 480px
+            h2
+              position: absolute
+              top: 0
+              left: 0
+              width: 100%
+              line-height: 30px
+              font-size: 30px
+              color: #434343
+              font-weight: bolder
+              text-align: center
+            .big-img
+              display: block
+              height: auto
+              width: 100%
+          .mini-img-list
+            flex: 1
+            display: flex
+            flex-direction: column
+            justify-content: center
+            align-items: flex-end
+            .mini-img
+              box-sizing: border-box
+              width: 70px
+              height: 70px
+              margin: 5px 0
+              border: 1px solid #ff6b3e
+              cursor: pointer
+              img
+                display: block
+                width: 100%
+                height: auto
         .info-right
           display: flex
           flex-direction: column
           width: 560px
           border: 1px solid #525252
-          height: 380px
+          height: 383px
           .info-title
             box-sizing: border-box
-            height: 38px
+            height: 36px
             padding-left: 36px
             line-height: 38px
             background-color: #525252
@@ -211,8 +308,8 @@ export default {
             box-sizing: border-box
             padding-left: 36px
             display: flex
-            height: 56px
-            line-height: 56px
+            height: 58px
+            line-height: 58px
             font-size: 18px
             &:nth-child(2n+1)
               background-color: #f4f4f4
@@ -234,10 +331,26 @@ export default {
           flex: 1
           margin-right: 80px
           padding-left: 36px
+          .icon-font-1
+            display: inline-block
+            width: 200px
+            height: 12px
+            margin-left: 16px
+            background-image: url('../assets/icon.png')
+            background-position: 0px 0px
+            background-repeat: no-repeat
         .right-title
           box-sizing: border-box
           width: 562px
           padding-left: 36px
+          .icon-font-1
+            display: inline-block
+            width: 200px
+            height: 12px
+            margin-left: 16px
+            background-image: url('../assets/icon.png')
+            background-position: 0px -62px
+            background-repeat: no-repeat
       .goodsinfo-tab2
         min-height: 120px
         display: flex
@@ -284,4 +397,52 @@ export default {
             flex: 1
             padding-right: 46px
             text-align: right
+      .tab3-title
+        display: flex
+        align-items: center
+        height: 58px
+        padding-top: 25px
+        font-size: 20px
+        color: #4e4e4e
+        font-weight: bold
+        .icon-font-1
+          display: inline-block
+          width: 313px
+          height: 12px
+          margin-left: 16px
+          background-image: url('../assets/icon.png')
+          background-position: 0px -125px
+          background-repeat: no-repeat
+      .goodsinfo-tab3
+        width: 100%
+        margin-bottom: 100px
+        .car-brand
+          width: 100%
+          .car-title
+            box-sizing: border-box
+            display: flex
+            align-items: center
+            min-height: 66px
+            background-color: #f9f9f9
+            padding: 0px 56px 0px 24px
+            img
+              display: inline-block
+              width: 50px
+              height: 50px
+              background-color: rgba(255, 255, 0, 0.6)
+              margin-right: 18px
+            span
+              flex: 1
+              font-size: 16px
+              color :#4e4e4e
+              font-weight: bold
+            a
+              padding-left: 26px
+              color: #aaaaaa
+              font-size: 14px
+              text-decoration: none
+              background-image: url('../assets/icon.png')
+              background-position: -200px -196px
+              background-repeat: no-repeat
+
 </style>
