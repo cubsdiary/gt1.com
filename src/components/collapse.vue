@@ -3,12 +3,11 @@
     @before-enter="beforeEnter"
     @enter="enter"
     @after-enter="afterEnter"
-
     @before-leave="beforeLeave"
     @leave="leave"
     @after-leave="afterLeave"
     >
-    <ul class="connect-modal" v-if="show">
+    <ul class="connect-modal" :style="{transition: 'all .3s ease-in-out'}">
       <li class="car-modal" id="car-modal-title">
         <h3 class="lab lab-1">车型</h3>
         <h3 class="lab lab-2">排量</h3>
@@ -19,65 +18,60 @@
         <h3 class="lab lab-7">空调滤</h3>
         <h3 class="lab lab-8"></h3>
       </li>
-      <li class="car-modal" v-for="item in data" :key="item">
+      <li class="car-modal" v-for="item in data" :key="item" ref="modalList">
         <div class="lab lab-1"><span>车型</span></div>
         <div class="lab lab-2"><span>排量</span></div>
         <div class="lab lab-3"><span>年限</span></div>
         <div class="lab lab-4 bor">
           <div class="text-more">
-            <span>
-              燃滤
-              <div class="toast-info right-lv">
-                <div class="box-s"></div>
-                <img class="img-info" src="../assets/default.png"></img>
-              </div>
-            </span>
+            <a href="javascript:;">
+              <span>燃滤</span>
+              <Toast></Toast>
+            </a>
           </div>
         </div>
         <div class="lab lab-5 bor">
           <div class="text-more">
-            <!-- <Toast :right="1"></Toast> -->
-            <span>燃滤</span>
+            <a href="javascript:;">
+              <span>燃滤</span>
+              <Toast></Toast>
+            </a>
           </div>
         </div>
         <div class="lab lab-6 bor">
           <div class="text-more">
-            <!-- <Toast :right="1"></Toast> -->
-            <span>燃滤
-              <div class="toast-info right-lv">
-                <div class="box-s"></div>
-                <img class="img-info" src="../assets/default.png"></img>
-              </div>
-            </span>
+            <a href="javascript:;">
+              <span>燃滤</span>
+              <Toast></Toast>
+            </a>
           </div>
           <div class="text-more">
-            <!-- <Toast :right="1"></Toast> -->
-            <span>燃滤
-              <div class="toast-info right-lv">
-                <div class="box-s"></div>
-                <img class="img-info" src="../assets/default.png"></img>
-              </div>
-            </span>
+            <a href="javascript:;">
+              <span>燃滤</span>
+              <Toast></Toast>
+            </a>
           </div>
           <div class="text-more">
-            <!-- <Toast :right="1"></Toast> -->
-            <span>燃滤
-              <div class="toast-info right-lv">
-                <div class="box-s"></div>
-                <img class="img-info" src="../assets/default.png"></img>
-              </div>
-            </span>
+            <a href="javascript:;">
+              <span>燃滤</span>
+              <Toast></Toast>
+            </a>
           </div>
         </div>
         <div class="lab lab-7 bor">
           <div class="text-more">
-            <!-- <Toast :right="1"></Toast> -->
-            <span>燃滤</span>
-          </div></div>
+            <a href="javascript:;">
+              <span>燃滤</span>
+              <Toast></Toast>
+            </a>
+          </div>
+        </div>
         <div class="lab lab-8 bor">
           <div class="text-more">
-            <!-- <Toast :right="2"></Toast> -->
-            <span>其他配件</span>
+            <a href="javascript:;">
+              <span>其他配件</span>
+              <clickToast></clickToast>
+            </a>
           </div>
         </div>
       </li>
@@ -86,8 +80,13 @@
 </template>
 
 <script>
-import {addClass, removeClass} from '../assets/utils/dom'
+import Toast from '@/components/toast'
+import clickToast from '@/components/clickToast'
 export default {
+  components: {
+    Toast,
+    clickToast
+  },
   props: {
     show: {
       type: Boolean
@@ -99,41 +98,37 @@ export default {
   methods: {
     beforeEnter (el) {
       el.style.height = 0 + 'px'
-      el.style.opacity = 0
     },
     enter (el, done) {
-      addClass(el, 'collapse-transition')
-      el.style.height = this.data.length * 44 + 38 + 'px'
-      el.style.opacity = 1
-      done()
+      let allHeight = 0
+      this.$refs.modalList.forEach((item, index) => {
+        allHeight += item.offsetHeight
+      })
+      el.style.height = allHeight + 38 + 'px'
+      setTimeout(() => {
+        done()
+      }, 300)
     },
     afterEnter (el) {
-      removeClass(el, 'collapse-transition')
-      console.log('afterEnter', el.style.height + '----')
+      el.style.overflow = 'visible'
     },
     beforeLeave (el) {
-      el.style.height = this.data.length * 44 + 38 + 'px'
-      el.style.opacity = 1
-      console.log('beforeLeave', el.style.height + '----')
+      el.style.overflow = 'hidden'
     },
     leave (el, done) {
-      addClass(el, 'collapse-transition')
       el.style.height = 0 + 'px'
-      el.style.opacity = 0
-      console.log('leave', el.style.height + '----')
-      done()
+      setTimeout(() => {
+        done()
+      }, 300)
     },
     afterLeave (el) {
-      removeClass(el,'collapse-transition')
-      console.log('afterLeave', el.style.height + '---')
+      el.style.overflow = 'hidden'
     }
   }
 }
 </script>
 
 <style scoped lang="stylus">
-  .collapse-transition
-    transition: all 10s
   .connect-modal
     width: 100%
     overflow: hidden
@@ -176,40 +171,11 @@ export default {
           width: 100%
           height: 24px
           line-height: 24px
-          .toast-info
-            display: none
-            position: absolute
-            top: 0
-            width: 225px
-            height: 200px
-            background-color: #fff
-            -webkit-box-shadow: 0 0px 20px #ead8d8
-            border-radius: 5px
-            z-index: 100
-            &.right-lv
-              right: 140px
-            &.right-other
-              right: 104px
-            .box-s
-              position: absolute
-              right: -10px
-              top: 7px
-              width: 0
-              height: 0
-              border-width: 5px
-              border-style: solid
-              border-color: transparent transparent transparent #fff
-            .img-info
-              width: 180px
-              height: 180px
-              display: block
-              background-color: red
-              margin: 0 auto
-              margin-top: 10px
-        span
-          cursor: pointer
-          &:hover
-            font-weight: bold
-            .toast-info
-              display: block
+          a
+            font-size: 14px
+            color: #4e4e4e
+            &:hover
+              font-weight: bold
+              .toast-info
+                display: block
 </style>

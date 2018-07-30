@@ -162,9 +162,25 @@
           <div class="car-title">
             <img src="" alt="">
             <span>丰田 TOYUTA</span>
-            <a href="javascript:;" @click="toggleClick">收起</a>
+            <a href="javascript:;" @click="toggleClick(0)">收起</a>
           </div>
-          <Collapse :show="showType" :data="data"></Collapse>
+          <Collapse v-if="showType1" :data="data"></Collapse>
+        </li>
+        <li class="car-brand">
+          <div class="car-title">
+            <img src="" alt="">
+            <span>丰田 TOYUTA</span>
+            <a href="javascript:;" @click="toggleClick(1)">收起</a>
+          </div>
+          <Collapse v-if="showType2" :data="data"></Collapse>
+        </li>
+        <li class="car-brand">
+          <div class="car-title">
+            <img src="" alt="">
+            <span>丰田 TOYUTA</span>
+            <a href="javascript:;" @click="toggleClick(2)">收起</a>
+          </div>
+          <Collapse v-if="showType3" :data="data"></Collapse>
         </li>
       </ul>
     </div>
@@ -181,13 +197,21 @@ export default {
   },
   data () {
     return {
-      showType: false,
-      data: [0, 1, 2, 3]
+      showType1: false,
+      data: [0, 1, 2, 3, 4],
+      showType2: false,
+      showType3: false
     }
   },
   methods: {
-    toggleClick () {
-      this.showType = !this.showType
+    toggleClick (index) {
+      if (index === 0) {
+        this.showType1 = !this.showType1
+      } else if (index === 1) {
+        this.showType2 = !this.showType2
+      } else if (index === 2) {
+        this.showType3 = !this.showType3
+      }
     }
   }
 }
@@ -196,12 +220,12 @@ export default {
 <style scoped lang="stylus">
   .goodsinfo-container
     width: 100%
-    overflow: hidden
+    // overflow: hidden
     ul
       list-style: none
     .goodsinfo-content
       width: 1200px
-      overflow: hidden
+      // overflow: hidden
       padding-top: 15px
       margin: 0 auto
       .navigation
@@ -418,6 +442,7 @@ export default {
         margin-bottom: 100px
         .car-brand
           width: 100%
+          margin-bottom: 5px
           .car-title
             box-sizing: border-box
             display: flex
