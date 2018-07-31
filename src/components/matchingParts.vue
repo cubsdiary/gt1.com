@@ -1,20 +1,31 @@
 <template>
   <div class="matching-parts">
-    <select class="" name="" size="1">
-      <option v-for="item in values" :key="item" :value="item">{{item + '----OO'}}</option>
-    </select>
+    <Select :data="values" @update="getValue" :disabled="true"></Select>
+    <Select :data="values" @update="getValue" :disabled="false"></Select>
   </div>
 </template>
 
 <script>
+import Select from '@/components/select'
 export default {
+  components: {
+    Select
+  },
   computed: {
     values () {
       let arr = []
       for (let i = 0; i < 100; i++) {
-        arr.push(i)
+        arr.push({
+          id: i,
+          value: i + '-----oops'
+        })
       }
       return arr
+    }
+  },
+  methods: {
+    getValue (value) {
+      console.log(value)
     }
   }
 }
