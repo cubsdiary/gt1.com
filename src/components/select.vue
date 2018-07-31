@@ -8,7 +8,7 @@
     <transition name="fade">
       <div class="options" v-show="activeFlag">
         <ul :style="{height: autoHeight + 'px'}">
-          <li v-for="(item, index) in data" :class="selected.id === item.id ? 'active' : ''" :key="item.id" @click.prevent.stop="selectItem(item)">{{item.value}}</li>
+          <li v-for="item in data" :class="selected.id === item.id ? 'active' : ''" :key="item.id" @click.prevent.stop="selectItem(item)">{{item.value}}</li>
         </ul>
       </div>
     </transition>
@@ -71,7 +71,6 @@ export default {
     background-color: #fff
     border: 1px solid rgba(255, 119, 83, .5)
     border-radius: 5px
-    margin: 5px auto
     cursor: pointer
     &.disable
       background-color: #f0f0f0

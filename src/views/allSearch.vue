@@ -188,7 +188,6 @@ export default {
         display: flex
         width: 100%
         height: 460px
-        overflow: hidden
       .hot-parts
         width: 100%
         overflow: hidden
