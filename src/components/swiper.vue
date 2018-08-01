@@ -170,7 +170,7 @@ export default {
         &.dots-active
           opacity: 0.6
     .slider-group
-      height: 430px
+      height: 313px
       width: 100%
       display: flex
       & > div

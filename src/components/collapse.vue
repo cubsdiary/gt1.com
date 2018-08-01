@@ -93,13 +93,23 @@ export default {
     },
     data: {
       type: Array
+    },
+    transition: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     beforeEnter (el) {
+      // if (!this.transition) {
+      //   return
+      // }
       el.style.height = 0 + 'px'
     },
     enter (el, done) {
+      // if (!this.transition) {
+      //   return
+      // }
       let allHeight = 0
       this.$refs.modalList.forEach((item, index) => {
         allHeight += item.offsetHeight
@@ -110,18 +120,30 @@ export default {
       }, 300)
     },
     afterEnter (el) {
+      // if (!this.transition) {
+      //   return
+      // }
       el.style.overflow = 'visible'
     },
     beforeLeave (el) {
+      // if (!this.transition) {
+      //   return
+      // }
       el.style.overflow = 'hidden'
     },
     leave (el, done) {
+      // if (!this.transition) {
+      //   return
+      // }
       el.style.height = 0 + 'px'
       setTimeout(() => {
         done()
       }, 300)
     },
     afterLeave (el) {
+      // if (!this.transition) {
+      //   return
+      // }
       el.style.overflow = 'hidden'
     }
   }

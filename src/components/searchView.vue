@@ -16,6 +16,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="stylus">
   .search-view
+    display: inline-block
     box-sizing: border-box
     width: 100%
     height: 70px

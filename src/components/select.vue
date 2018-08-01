@@ -66,8 +66,8 @@ export default {
     list-style: none
   .vue-select
     position: relative
-    width: 360px
-    height: 40px
+    width: 100%
+    height: 30px
     background-color: #fff
     border: 1px solid rgba(255, 119, 83, .5)
     border-radius: 5px
@@ -91,8 +91,8 @@ export default {
       box-sizing: border-box
       padding: 0 15px
       width: 90%
-      height: 40px
-      line-height: 40px
+      height: 30px
+      line-height: 30px
       font-size: 14px
       color: #ccc
       &.selected
@@ -114,7 +114,7 @@ export default {
     .options
       display: block
       position: absolute
-      top: 40px
+      top: 30px
       left: 0px
       width: 100%
       padding: 5px 0

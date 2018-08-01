@@ -44,30 +44,31 @@ export default {
 
 <style scoped lang="stylus">
   .matching-parts
+    display: inline-block
     box-sizing: border-box
-    width: 400px
+    width: 300px
     background-color: #727172
-    padding: 25px 20px
+    padding: 20px 20px
     & > h2
       box-sizing: border-box
       padding-left: 16px
-      height: 38px
-      line-height: 38px
-      font-size: 16px
+      height: 30px
+      line-height: 30px
+      font-size: 14px
       color: #fff
     .btn-box
       display: flex
-      margin-top: 30px
+      margin-top: 15px
       justify-content: flex-end
       width: 100%
-      height: 50px
+      height: 40px
       .button
         width: 140px
-        height: 50px
+        height: 40px
         background: -webkit-linear-gradient(left, #ff8838, #ff6e3d)
         text-align: center
-        line-height: 50px
-        font-size: 22px
+        line-height: 40px
+        font-size: 16px
         color: #fff
         cursor: pointer
 </style>

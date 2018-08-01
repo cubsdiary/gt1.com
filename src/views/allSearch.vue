@@ -187,7 +187,7 @@ export default {
       .banner-content
         display: flex
         width: 100%
-        height: 460px
+        height: 343px
       .hot-parts
         width: 100%
         overflow: hidden
