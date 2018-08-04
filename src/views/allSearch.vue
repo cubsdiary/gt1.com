@@ -151,6 +151,11 @@ export default {
         img: 'https://cdn.cubsdiary.com/images/gt1com/a5.jpg'
       }]
     }
+  },
+  created () {
+    this.api_post('/api/car/branchList', (res) => {
+      console.log(res)
+    })
   }
 }
 </script>
