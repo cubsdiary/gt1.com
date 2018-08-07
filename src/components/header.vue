@@ -24,29 +24,32 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from 'vuex'
 export default {
-  data () {
-    return {
-      classify: null
-    }
-  },
   created () {
     if (!this.classify) {
       this.getClassify()
     }
   },
+  computed: {
+    ...mapGetters([
+      'classify'
+    ])
+  },
   methods: {
     getClassify () {
       this.api_post('/api/website/goodsCateList', (res) => {
         if (res.errorCode === 0) {
-          console.log(res)
-          this.classify = res.data
+          this.saveClassifySession(res.data)
         }
       })
     },
     selectProduct () {
 
-    }
+    },
+    ...mapActions([
+      'saveClassifySession'
+    ])
   }
 }
 </script>

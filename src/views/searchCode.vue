@@ -5,7 +5,7 @@
         <div class="title-bg"></div>
         <div class="title">滤清器搜索</div>
       </div>
-      <searchView></searchView>
+      <searchView @search="getSearchInfo"></searchView>
       <div class="template-bar">
         <div class="template-title bar1 height-90">
           <div class="title-bg"></div>
@@ -27,9 +27,9 @@
             <li class="search-td" v-for="item in showDatas" :key="item.id">
               <div class="search-gt1 search-box black white">
                 <h3>
-                  <a href="javascript:;">
+                  <a href="javascript:;" @click="goGoodsInfo(item)">
                     <span>{{item.code}}</span>
-                    <Toast :direction="'right'" :left="'auto'"></Toast>
+                    <Toast :direction="'right'" :left="'auto'" :img="item.img"></Toast>
                   </a>
                 </h3>
                 <h3>{{item.name}}</h3>
@@ -37,7 +37,7 @@
               <div class="search-other search-box" v-if="item.apps">
                 <h3>对标型号</h3>
                 <ul class="other">
-                  <li v-for="(res, index) in item.apps"><h3>{{res}}</h3></li>
+                  <li v-for="(res, index) in item.apps" :key="index"><h3><span @click="goGoodsInfo(item)">{{res}}</span></h3></li>
                 </ul>
               </div>
             </li>
@@ -67,8 +67,14 @@ export default {
       showDatas: null
     }
   },
+  watch: {
+    '$route': function (to, from) {
+      console.log('我变了', to)
+      this.searchData(to.query.query, to.query.classify)
+    }
+  },
   created () {
-    this.searchData(this.$route.query.query)
+    this.searchData(this.$route.query.query, this.$route.query.classify)
   },
   computed: {
     ...mapGetters([
@@ -76,7 +82,13 @@ export default {
     ])
   },
   methods: {
-    searchData (query) {
+    getSearchInfo (res) {
+      this.$router.push('/searchcode?classify=' + this.$route.query.classify + '&query=' + res)
+    },
+    goGoodsInfo (item) {
+      this.$router.push('/goodsinfo?goodsid=' + item.id)
+    },
+    searchData (query, id) {
       this.api_post('/api/website/goodsLists', (res) => {
         if (res.errorCode === 0) {
           console.log(res.data)
@@ -84,7 +96,7 @@ export default {
         }
       }, {
         key: query,
-        cateId: this.classifyId,
+        cateId: id,
         page: 1,
         limit: 100
       })
@@ -202,14 +214,12 @@ export default {
                 & > li
                   display: inline-block
                   box-sizing: border-box
-                  padding: 5px 0px
-                  width: 160px
-                  height: 30px
-                  line-height: 30px
+                  padding: 7px 20px
                   & > h3
                     font-size: 16px
                     cursor: pointer
-                    &:hover
+                    line-height: normal
+                    span:hover
                       text-decoration: underline
       .hot-parts
         width: 100%

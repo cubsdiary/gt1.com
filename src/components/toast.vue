@@ -1,7 +1,7 @@
 <template>
-  <div class="toast-info" :class="left === 'auto' ? 'auto' : direction === 'left' ? 'right' : 'left'">
+  <div class="toast-info" :class="left ? left : direction">
     <div class="box-s" :class="{'left': direction === 'right', 'right': direction === 'left'}"></div>
-    <img class="img-info" src="../assets/default.png"/>
+    <img class="img-info" :src="imgUrl + img"/>
   </div>
 </template>
 
@@ -14,7 +14,11 @@ export default {
     },
     left: {
       type: String,
-      default: 0
+      default: ''
+    },
+    img: {
+      type: String,
+      required: true
     }
   }
 }
@@ -44,7 +48,6 @@ export default {
       height: 0
       border-width: 5px
       border-style: solid
-
       &.right
         right: -10px
         border-color: transparent transparent transparent #fff

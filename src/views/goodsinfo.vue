@@ -203,7 +203,17 @@ export default {
       showType3: false
     }
   },
+  created () {
+    this.getGoodsInfo(this.$route.query.goodsid)
+  },
   methods: {
+    getGoodsInfo (id) {
+      this.api_post('/api/website/getGoodInfo', (res) => {
+        console.log(res)
+      }, {
+        goodId: id
+      })
+    },
     toggleClick (index) {
       if (index === 0) {
         this.showType1 = !this.showType1

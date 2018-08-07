@@ -5,7 +5,7 @@
         <div class="title-bg"></div>
         <div class="title">滤清器搜索</div>
       </div>
-      <searchView></searchView>
+      <searchView @search="getSearchInfo"></searchView>
       <div class="template-bar">
         <div class="template-title bar1 height-90">
           <div class="title-bg"></div>
@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="banner-content">
-        <matchingParts/>
+        <matchingParts @match="goMatchProduct"/>
         <div class="search-resule">
           <div class="search-title">
             <img src="../assets/default.png" alt="">
@@ -103,6 +103,14 @@ export default {
   },
   data () {
     return {
+    }
+  },
+  methods: {
+    getSearchInfo (res) {
+      this.$router.push('/searchcode?classify=' + 2 + '&query=' + res)
+    },
+    goMatchProduct (res) {
+      this.$router.push('/searchmodal?classify=' + 2 + '&type=' + 1 + '&brandid=' + 2 + '&serieid' + 3 + '&engine=' + 4)
     }
   }
 }

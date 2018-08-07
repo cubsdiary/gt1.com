@@ -5,13 +5,13 @@
         <div class="title-bg"></div>
         <div class="title">滤清器搜索</div>
       </div>
-      <searchView></searchView>
+      <searchView @search="getSearchInfo"></searchView>
       <div class="template-title car-bar">
         <div class="title-bg"></div>
         <div class="title">车型匹配配件</div>
       </div>
       <div class="banner-content">
-        <matchingParts/>
+        <matchingParts @match="goMatchProduct"/>
         <Banner :recommends="bannerImgs" v-if="bannerImgs"></Banner>
       </div>
       <div class="template-title font">
@@ -33,7 +33,7 @@ import searchView from '@/components/searchView'
 import cycleRolling from '@/components/cycleRolling'
 import matchingParts from '@/components/matchingParts'
 import Banner from '@/components/swiper'
-import {mapMutations} from 'vuex'
+import {mapMutations, mapGetters} from 'vuex'
 
 export default {
   name: 'home',
@@ -69,7 +69,10 @@ export default {
         })
       }
       return arr
-    }
+    },
+    ...mapGetters([
+      'classifyId'
+    ])
   },
   methods: {
     getData (id) {
@@ -83,6 +86,12 @@ export default {
       }, {
         id: id
       })
+    },
+    getSearchInfo (res) {
+      this.$router.push('/searchcode?classify=' + this.classifyId + '&query=' + res)
+    },
+    goMatchProduct (res) {
+      this.$router.push('/searchmodal?classify=' + this.classifyId + '&type=' + 1 + '&brandid=' + 2 + '&serieid' + 3 + '&engine=' + 4)
     },
     ...mapMutations({
       setClassifyId: 'SET_CLASSIFY_ID'

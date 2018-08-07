@@ -19,7 +19,7 @@
       <Option v-for="(item, index) in displacement" :value="item" :key="index">{{ item }}</Option>
     </Select>
     <div class="btn-box">
-      <div class="button">
+      <div class="button" @click="goMatchProduct">
         开始匹配
       </div>
     </div>
@@ -40,7 +40,8 @@ export default {
       model3: null,
       brandList: null,
       modalList: null,
-      displacement: null
+      displacement: null,
+      value: null
     }
   },
   created () {
@@ -91,6 +92,9 @@ export default {
       }, {
         code: 19
       })
+    },
+    goMatchProduct () {
+      this.$emit('match', this.value)
     }
   }
 }

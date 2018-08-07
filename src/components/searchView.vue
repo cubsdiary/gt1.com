@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     goSearch () {
-      this.$router.push('/searchcode?query=' + this.search)
+      this.$emit('search', this.search)
     }
   }
 }
