@@ -1,15 +1,23 @@
 <template>
   <div class="matching-parts">
     <h2>汽车种类</h2>
-    <Select v-model="model" style="width:100%">
-      <Option v-for="item in carClassify" :value="item.name" :key="item.name">{{ item.name }}</Option>
+    <Select v-model="model" style="width:100%" @on-change="getValue">
+      <Option v-for="item in carClassify" :value="item.id" :key="item.name">{{ item.name }}</Option>
     </Select>
     <h2>生产商</h2>
-    <!-- <Select :data="values" @update="getValue" :disabled="false"></Select> -->
+    <Select v-model="model1" style="width:100%" filterable>
+      <Option v-for="item in brandList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+    </Select>
     <h2>车系</h2>
-    <!-- <Select :data="values" @update="getValue" :disabled="false"></Select> -->
+    <Select v-model="model2" style="width:100%" filterable @on-change="getValue">
+      <OptionGroup v-for="res in modalList" :label="res.name" :key="res.name">
+        <Option v-for="item in res.sons" :value="item.id" :key="item.id">{{ item.name }}</Option>
+      </OptionGroup>
+    </Select>
     <h2>发动机排量</h2>
-    <!-- <Select :data="values" @update="getValue" :disabled="false"></Select> -->
+    <Select v-model="model3" style="width:100%">
+      <Option v-for="(item, index) in displacement" :value="item" :key="index">{{ item }}</Option>
+    </Select>
     <div class="btn-box">
       <div class="button">
         开始匹配
@@ -26,8 +34,19 @@ export default {
         id: 1,
         name: '轿车(2-9人)'
       }],
-      model: null
+      model: null,
+      model1: null,
+      model2: null,
+      model3: null,
+      brandList: null,
+      modalList: null,
+      displacement: null
     }
+  },
+  created () {
+    this.getBrand()
+    this.getCarModal()
+    this.getDisplacement()
   },
   computed: {
     values () {
@@ -42,8 +61,36 @@ export default {
     }
   },
   methods: {
-    getValue (value) {
-      console.log(value)
+    getValue () {
+      console.log(this.model2)
+    },
+    getBrand () {
+      this.api_post('/api/car/branchList', (res) => {
+        if (res.errorCode === 0) {
+          this.brandList = res.data
+        }
+        console.log(res)
+      })
+    },
+    getCarModal () {
+      this.api_post('/api/car/firmList', (res) => {
+        if (res.errorCode === 0) {
+          this.modalList = res.data
+        }
+        console.log(res)
+      }, {
+        brandId: 33
+      })
+    },
+    getDisplacement () {
+      this.api_post('/api/car/displacementList', (res) => {
+        if (res.errorCode === 0) {
+          this.displacement = res.data
+        }
+        console.log(res)
+      }, {
+        code: 19
+      })
     }
   }
 }

@@ -33,6 +33,7 @@ import searchView from '@/components/searchView'
 import cycleRolling from '@/components/cycleRolling'
 import matchingParts from '@/components/matchingParts'
 import Banner from '@/components/swiper'
+import {mapMutations} from 'vuex'
 
 export default {
   name: 'home',
@@ -73,6 +74,7 @@ export default {
   methods: {
     getData (id) {
       let _self = this
+      this.setClassifyId(id)
       this.api_post('/api/website/cateSelectGoods', (res) => {
         if (res.errorCode === 0) {
           _self.bannerImgs = res.data.cateImgs
@@ -81,7 +83,10 @@ export default {
       }, {
         id: id
       })
-    }
+    },
+    ...mapMutations({
+      setClassifyId: 'SET_CLASSIFY_ID'
+    })
   }
 }
 </script>

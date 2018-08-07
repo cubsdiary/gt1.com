@@ -1,5 +1,5 @@
 <template>
-  <div class="toast-info" :class="{'left': direction === 'left', 'right': direction === 'right'}">
+  <div class="toast-info" :class="left === 'auto' ? 'auto' : direction === 'left' ? 'right' : 'left'">
     <div class="box-s" :class="{'left': direction === 'right', 'right': direction === 'left'}"></div>
     <img class="img-info" src="../assets/default.png"/>
   </div>
@@ -11,6 +11,10 @@ export default {
     direction: {
       type: String,
       default: 'left'
+    },
+    left: {
+      type: String,
+      default: 0
     }
   }
 }
@@ -27,6 +31,8 @@ export default {
     -webkit-box-shadow: 0 0px 20px #ead8d8
     border-radius: 5px
     z-index: 100
+    &.auto
+      left: 120%
     &.right
       left: 140px
     &.left

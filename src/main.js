@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import store from './store'
 import axios from 'axios'
 import Vueaxios from 'vue-axios'
 import iView from 'iview'
@@ -19,5 +20,6 @@ Vue.prototype.imgUrl = 'http://192.168.0.113:8080/gt/download?id='
 
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

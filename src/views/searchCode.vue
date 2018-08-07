@@ -24,55 +24,20 @@
             <h3>配件类型</h3>
           </div>
           <ul class="search-th">
-            <li class="search-td">
-              <div class="search-gt1 search-box black">
-                <h3>
-                  <a href="javascript:;">
-                    <span>TYO-1342352</span>
-                    <Toast :direction="'right'"></Toast>
-                  </a>
-                </h3>
-                <h3>机油滤清器</h3>
-              </div>
-            </li>
-            <li class="search-td">
-              <div class="search-gt1 search-box black">
-                <h3>
-                  <a href="javascript:;">
-                    <span>TYO-1342352</span>
-                    <Toast :direction="'right'"></Toast>
-                  </a>
-                </h3>
-                <h3>机油滤清器</h3>
-              </div>
-            </li>
-            <li class="search-td">
-              <div class="search-gt1 search-box black">
-                <h3>
-                  <a href="javascript:;">
-                    <span>TYO-1342352</span>
-                    <Toast :direction="'right'"></Toast>
-                  </a>
-                </h3>
-                <h3>机油滤清器</h3>
-              </div>
-            </li>
-            <li class="search-td">
+            <li class="search-td" v-for="item in showDatas" :key="item.id">
               <div class="search-gt1 search-box black white">
                 <h3>
                   <a href="javascript:;">
-                    <span>TYO-1342352</span>
-                    <Toast :direction="'right'"></Toast>
+                    <span>{{item.code}}</span>
+                    <Toast :direction="'right'" :left="'auto'"></Toast>
                   </a>
                 </h3>
-                <h3>机油滤清器</h3>
+                <h3>{{item.name}}</h3>
               </div>
-              <div class="search-other search-box">
+              <div class="search-other search-box" v-if="item.apps">
                 <h3>对标型号</h3>
                 <ul class="other">
-                  <li><h3>TYO-1342352</h3></li>
-                  <li><h3>TYO-1342352</h3></li>
-                  <li><h3>TYO-1342352</h3></li>
+                  <li v-for="(res, index) in item.apps"><h3>{{res}}</h3></li>
                 </ul>
               </div>
             </li>
@@ -88,6 +53,7 @@
 import searchView from '@/components/searchView'
 import matchingParts from '@/components/matchingParts'
 import Toast from '@/components/toast'
+import {mapGetters} from 'vuex'
 export default {
   name: 'home',
   components: {
@@ -97,6 +63,31 @@ export default {
   },
   data () {
     return {
+      query: '',
+      showDatas: null
+    }
+  },
+  created () {
+    this.searchData(this.$route.query.query)
+  },
+  computed: {
+    ...mapGetters([
+      'classifyId'
+    ])
+  },
+  methods: {
+    searchData (query) {
+      this.api_post('/api/website/goodsLists', (res) => {
+        if (res.errorCode === 0) {
+          console.log(res.data)
+          this.showDatas = res.data
+        }
+      }, {
+        key: query,
+        cateId: this.classifyId,
+        page: 1,
+        limit: 100
+      })
     }
   }
 }
@@ -217,6 +208,9 @@ export default {
                   line-height: 30px
                   & > h3
                     font-size: 16px
+                    cursor: pointer
+                    &:hover
+                      text-decoration: underline
       .hot-parts
         width: 100%
         overflow: hidden

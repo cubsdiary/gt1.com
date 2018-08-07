@@ -1,15 +1,25 @@
 <template>
   <div class="search-view">
     <div class="search">
-      <input type="text" placeholder="请输入GT1号或关键字" class="search-input">
-      <button type="button" name="button" class="search-btn">搜索</button>
+      <input type="text" v-model="search" placeholder="请输入GT1号或关键字" class="search-input">
+      <button type="button" name="button" class="search-btn" @click="goSearch">搜索</button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'searchView'
+  name: 'searchView',
+  data () {
+    return {
+      search: ''
+    }
+  },
+  methods: {
+    goSearch () {
+      this.$router.push('/searchcode?query=' + this.search)
+    }
+  }
 }
 </script>
 
