@@ -10,10 +10,16 @@
 <script>
 export default {
   name: 'searchView',
+  props: {
+    value: String
+  },
   data () {
     return {
       search: ''
     }
+  },
+  created () {
+    this.search = this.value
   },
   methods: {
     goSearch () {

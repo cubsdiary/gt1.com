@@ -3,16 +3,14 @@
     <div class="header-con">
       <h1><a class="logo" href="#"><img src="../assets/logo60@3x.png" alt="">  </a></h1>
       <ul>
-        <li><router-link to="/">首页</router-link></li>
+        <li><router-link to="/home" >首页</router-link></li>
         <li>
-          <a src="#" @click="selectProduct" class="product">
+          <a src="#" class="product">
             <span>产品</span>
             <div class="product-list">
               <!-- <div class="box-s"></div> -->
               <ul>
-                <li v-for="(item, index) in classify" :key="index">
-                  <router-link :to="{name: 'allSearch', params: {classify: item.id}}">{{item.title}}</router-link>
-                </li>
+                <li v-for="(item, index) in classify" :key="index" @click="goRouter(item)">{{item.title}}</li>
               </ul>
             </div>
           </a>
@@ -33,7 +31,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'classify'
+      'classify',
+      'nowClassify'
     ])
   },
   methods: {
@@ -44,11 +43,13 @@ export default {
         }
       })
     },
-    selectProduct () {
-
+    goRouter (item) {
+      this.saveNowClassifySession(item)
+      this.$router.push({name: 'allSearch', params: {classify: item.id}})
     },
     ...mapActions([
-      'saveClassifySession'
+      'saveClassifySession',
+      'saveNowClassifySession'
     ])
   }
 }
@@ -119,7 +120,8 @@ export default {
             color: #242424
             text-decoration: none
             transition: all .2s
-          .active-class
-            text-decoration: underline
-            font-size: 19px
+            &.active-class
+              text-decoration: underline
+              font-size: 19px
+              color: red
 </style>

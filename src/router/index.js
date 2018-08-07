@@ -8,16 +8,17 @@ import searchCode from '../views/searchCode.vue'
 import searchModal from '../views/searchModal.vue'
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   linkActiveClass: 'active-class',
   routes: [
     {
       path: '/',
-      name: 'home',
+      redirect: '/home'
+    }, {
+      path: '/home',
       component: home
     }, {
       path: '/aboutus',
-      name: 'aboutus',
       component: aboutus
     }, {
       path: '/allsearch/:classify',
@@ -25,16 +26,19 @@ export default new Router({
       component: allSearch
     }, {
       path: '/goodsinfo',
-      name: 'goodsinfo',
       component: goodsInfo
     }, {
       path: '/searchmodal',
-      name: 'searchmodal',
       component: searchModal
     }, {
       path: '/searchcode',
-      name: 'searchcode',
       component: searchCode
     }
   ]
 })
+router.beforeEach((to, from, next) => {
+  console.log(to, from)
+  next()
+})
+
+export default router

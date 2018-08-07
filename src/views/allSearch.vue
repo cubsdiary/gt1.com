@@ -33,7 +33,7 @@ import searchView from '@/components/searchView'
 import cycleRolling from '@/components/cycleRolling'
 import matchingParts from '@/components/matchingParts'
 import Banner from '@/components/swiper'
-import {mapMutations, mapGetters} from 'vuex'
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'home',
@@ -77,7 +77,6 @@ export default {
   methods: {
     getData (id) {
       let _self = this
-      this.setClassifyId(id)
       this.api_post('/api/website/cateSelectGoods', (res) => {
         if (res.errorCode === 0) {
           _self.bannerImgs = res.data.cateImgs
@@ -88,14 +87,11 @@ export default {
       })
     },
     getSearchInfo (res) {
-      this.$router.push('/searchcode?classify=' + this.classifyId + '&query=' + res)
+      this.$router.push('/searchcode?query=' + res)
     },
     goMatchProduct (res) {
-      this.$router.push('/searchmodal?classify=' + this.classifyId + '&type=' + 1 + '&brandid=' + 2 + '&serieid' + 3 + '&engine=' + 4)
-    },
-    ...mapMutations({
-      setClassifyId: 'SET_CLASSIFY_ID'
-    })
+      this.$router.push('/searchmodal?&type=' + 1 + '&brandid=' + 2 + '&serieid' + 3 + '&engine=' + 4)
+    }
   }
 }
 </script>

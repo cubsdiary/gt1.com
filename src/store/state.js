@@ -1,8 +1,9 @@
-import {loadClassify} from '../common/cache'
+import {loadClassify, loadNowClassify, loadBrandList} from '../common/cache'
 
 const state = {
   classify: loadClassify(),
-  classifyId: 0
+  nowClassify: loadNowClassify(),
+  brandList: loadBrandList()
 }
 
 export default state

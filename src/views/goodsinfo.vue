@@ -355,7 +355,7 @@ export default {
               text-align: right
       .tab2-title
         display: flex
-        height: 58px
+        height: 80px
         padding-top: 25px
         font-size: 20px
         color: #4e4e4e
@@ -434,7 +434,7 @@ export default {
       .tab3-title
         display: flex
         align-items: center
-        height: 58px
+        height: 80px
         padding-top: 25px
         font-size: 20px
         color: #4e4e4e

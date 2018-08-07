@@ -58,7 +58,6 @@ export default {
       width: 180px
       height: 180px
       display: block
-      background-color: red
       margin: 0 auto
       margin-top: 10px
 </style>

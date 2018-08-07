@@ -1,22 +1,22 @@
 <template>
   <div class="matching-parts">
     <h2>汽车种类</h2>
-    <Select v-model="model" style="width:100%" @on-change="getValue">
+    <Select v-model="car" style="width:100%" @on-change="getValue">
       <Option v-for="item in carClassify" :value="item.id" :key="item.name">{{ item.name }}</Option>
     </Select>
     <h2>生产商</h2>
-    <Select v-model="model1" style="width:100%" filterable>
+    <Select v-model="brand" style="width:100%" filterable>
       <Option v-for="item in brandList" :value="item.id" :key="item.id">{{ item.name }}</Option>
     </Select>
     <h2>车系</h2>
-    <Select v-model="model2" style="width:100%" filterable @on-change="getValue">
-      <OptionGroup v-for="res in modalList" :label="res.name" :key="res.name">
+    <Select v-model="serie" style="width:100%" filterable @on-change="getValue" :disabled="!brand">
+      <OptionGroup v-for="res in serieList" :label="res.name" :key="res.name">
         <Option v-for="item in res.sons" :value="item.id" :key="item.id">{{ item.name }}</Option>
       </OptionGroup>
     </Select>
     <h2>发动机排量</h2>
-    <Select v-model="model3" style="width:100%">
-      <Option v-for="(item, index) in displacement" :value="item" :key="index">{{ item }}</Option>
+    <Select v-model="engine" style="width:100%" :disabled="!serie">
+      <Option v-for="(item, index) in engineList" :value="item" :key="index">{{ item }}</Option>
     </Select>
     <div class="btn-box">
       <div class="button" @click="goMatchProduct">
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from 'vuex'
 export default {
   data () {
     return {
@@ -34,32 +35,34 @@ export default {
         id: 1,
         name: '轿车(2-9人)'
       }],
-      model: null,
-      model1: null,
-      model2: null,
-      model3: null,
-      brandList: null,
-      modalList: null,
-      displacement: null,
+      car: 1,
+      brand: null,
+      serie: null,
+      engine: null,
+      serieList: null,
+      engineList: null,
       value: null
     }
   },
   created () {
     this.getBrand()
-    this.getCarModal()
-    this.getDisplacement()
+  },
+  watch: {
+    brand: function (newBrand, oldBrand) {
+      if (newBrand !== null) {
+        this.getCarModal(newBrand)
+      }
+    },
+    serie: function (newSerie, oldSerie) {
+      if (newSerie !== null) {
+        this.getDisplacement(newSerie)
+      }
+    }
   },
   computed: {
-    values () {
-      let arr = []
-      for (let i = 0; i < 100; i++) {
-        arr.push({
-          id: i,
-          value: i + '-----oops'
-        })
-      }
-      return arr
-    }
+    ...mapGetters([
+      'brandList'
+    ])
   },
   methods: {
     getValue () {
@@ -68,34 +71,41 @@ export default {
     getBrand () {
       this.api_post('/api/car/branchList', (res) => {
         if (res.errorCode === 0) {
-          this.brandList = res.data
+          this.saveBrandListSession(res.data)
         }
-        console.log(res)
       })
     },
-    getCarModal () {
+    getCarModal (id) {
       this.api_post('/api/car/firmList', (res) => {
         if (res.errorCode === 0) {
-          this.modalList = res.data
+          this.serieList = res.data
         }
-        console.log(res)
       }, {
-        brandId: 33
+        brandId: id
       })
     },
-    getDisplacement () {
+    getDisplacement (id) {
       this.api_post('/api/car/displacementList', (res) => {
         if (res.errorCode === 0) {
-          this.displacement = res.data
+          this.engineList = res.data
         }
-        console.log(res)
       }, {
-        code: 19
+        code: id
       })
     },
     goMatchProduct () {
-      this.$emit('match', this.value)
-    }
+      if (this.car === null || this.brand === null || this.serie === null || this.engine === null) {
+        this.$Message.warning({
+          content: 'tiancuole',
+          closable: true
+        })
+      } else {
+        this.$emit('match', this.value)
+      }
+    },
+    ...mapActions([
+      'saveBrandListSession'
+    ])
   }
 }
 </script>

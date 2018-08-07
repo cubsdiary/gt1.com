@@ -5,7 +5,7 @@
         <div class="title-bg"></div>
         <div class="title">滤清器搜索</div>
       </div>
-      <searchView @search="getSearchInfo"></searchView>
+      <searchView @search="getSearchInfo" v-model="query"></searchView>
       <div class="template-bar">
         <div class="template-title bar1 height-90">
           <div class="title-bg"></div>
@@ -63,27 +63,28 @@ export default {
   },
   data () {
     return {
-      query: '',
+      query: null,
       showDatas: null
     }
   },
   watch: {
     '$route': function (to, from) {
       console.log('我变了', to)
-      this.searchData(to.query.query, to.query.classify)
+      this.searchData(to.query.query, this.nowClassify.id)
     }
   },
   created () {
-    this.searchData(this.$route.query.query, this.$route.query.classify)
+    this.query = this.$route.query.query
+    this.searchData(this.$route.query.query, this.nowClassify.id)
   },
   computed: {
     ...mapGetters([
-      'classifyId'
+      'nowClassify'
     ])
   },
   methods: {
     getSearchInfo (res) {
-      this.$router.push('/searchcode?classify=' + this.$route.query.classify + '&query=' + res)
+      this.$router.push('/searchcode?query=' + res)
     },
     goGoodsInfo (item) {
       this.$router.push('/goodsinfo?goodsid=' + item.id)
