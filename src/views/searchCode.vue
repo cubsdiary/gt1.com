@@ -3,7 +3,7 @@
     <div class="home-content">
       <div class="template-title height-80">
         <div class="title-bg"></div>
-        <div class="title">滤清器搜索</div>
+        <div class="title">{{nowClassify.title}}搜索</div>
       </div>
       <searchView @search="getSearchInfo" v-model="query"></searchView>
       <div class="template-bar">
@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="banner-content">
-        <matchingParts/>
+        <matchingParts @match="goMatchProduct"/>
         <div class="search-resule">
           <div class="search-title">
             <h3>GT1号</h3>
@@ -101,6 +101,9 @@ export default {
         page: 1,
         limit: 100
       })
+    },
+    goMatchProduct (res) {
+      this.$router.push('/searchmodal?car=' + res.car + '&brand=' + res.brand + '&serie=' + res.serie + '&engine=' + res.engine)
     }
   }
 }

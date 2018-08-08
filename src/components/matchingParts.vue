@@ -1,7 +1,7 @@
 <template>
   <div class="matching-parts">
     <h2>汽车种类</h2>
-    <Select v-model="car" style="width:100%" @on-change="getValue">
+    <Select v-model="car" style="width:100%">
       <Option v-for="item in carClassify" :value="item.id" :key="item.name">{{ item.name }}</Option>
     </Select>
     <h2>生产商</h2>
@@ -9,7 +9,7 @@
       <Option v-for="item in brandList" :value="item.id" :key="item.id">{{ item.name }}</Option>
     </Select>
     <h2>车系</h2>
-    <Select v-model="serie" style="width:100%" filterable @on-change="getValue" :disabled="!brand">
+    <Select v-model="serie" style="width:100%" :disabled="!brand">
       <OptionGroup v-for="res in serieList" :label="res.name" :key="res.name">
         <Option v-for="item in res.sons" :value="item.id" :key="item.id">{{ item.name }}</Option>
       </OptionGroup>
@@ -41,21 +41,34 @@ export default {
       engine: null,
       serieList: null,
       engineList: null,
-      value: null
+      clearSerie: false,
+      clearEngine: false
     }
   },
   created () {
-    this.getBrand()
+    if (this.brandList.length === 0) {
+      this.getBrand()
+    }
   },
   watch: {
     brand: function (newBrand, oldBrand) {
-      if (newBrand !== null) {
+      if (newBrand !== oldBrand) {
         this.getCarModal(newBrand)
       }
     },
     serie: function (newSerie, oldSerie) {
-      if (newSerie !== null) {
+      if (newSerie !== oldSerie) {
         this.getDisplacement(newSerie)
+      }
+    },
+    serieList: function (newSerie, oldSerie) {
+      if (newSerie !== oldSerie) {
+        this.serie = null
+      }
+    },
+    engineList: function (newEngine, oldEngine) {
+      if (newEngine !== oldEngine) {
+        this.engine = null
       }
     }
   },
@@ -65,9 +78,6 @@ export default {
     ])
   },
   methods: {
-    getValue () {
-      console.log(this.model2)
-    },
     getBrand () {
       this.api_post('/api/car/branchList', (res) => {
         if (res.errorCode === 0) {
@@ -100,7 +110,12 @@ export default {
           closable: true
         })
       } else {
-        this.$emit('match', this.value)
+        this.$emit('match', {
+          car: this.car,
+          brand: this.brand,
+          serie: this.serie,
+          engine: this.engine
+        })
       }
     },
     ...mapActions([

@@ -3,7 +3,7 @@
     <div class="home-content">
       <div class="template-title height-80">
         <div class="title-bg"></div>
-        <div class="title">滤清器搜索</div>
+        <div class="title">{{nowClassify.title}}搜索</div>
       </div>
       <searchView @search="getSearchInfo"></searchView>
       <div class="template-bar">
@@ -20,64 +20,25 @@
         <matchingParts @match="goMatchProduct"/>
         <div class="search-resule">
           <div class="search-title">
-            <img src="../assets/default.png" alt="">
-            <span>本田</span>
+            <img :src="imgUrl + cars.img" alt="">
+            <span>{{cars.name}}</span>
           </div>
           <ul class="connect-modal">
             <li class="car-modal" id="car-modal-title">
               <h3 class="lab lab-1">车型</h3>
               <h3 class="lab lab-2">排量</h3>
               <h3 class="lab lab-3">年限</h3>
-              <h3 class="lab lab-4">机滤</h3>
-              <h3 class="lab lab-5">空滤(空气)</h3>
-              <h3 class="lab lab-6">燃滤</h3>
-              <h3 class="lab lab-7">空调滤</h3>
+              <h3 class="lab lab-con lab-title" v-for="item in nowClassify.goodsCates" :key="item.id">{{item.title}}</h3>
             </li>
-            <li class="car-modal" v-for="item in [0, 1, 2, 3]" :key="item" ref="modalList">
-              <div class="lab lab-1"><span>车型</span></div>
-              <div class="lab lab-2"><span>排量</span></div>
-              <div class="lab lab-3"><span>年限</span></div>
-              <div class="lab lab-4 bor">
-                <div class="text-more">
+            <li class="car-modal" v-for="(item, c) in proclass" :key="c" ref="modalList">
+              <div class="lab lab-1"><span>{{item.carSerie}}</span></div>
+              <div class="lab lab-2"><span>{{item.carEngine}}</span></div>
+              <div class="lab lab-3"><span>{{item.carYear}}</span></div>
+              <div class="lab lab-con bor" v-for="(res, a) in item.goodsInfo" :key="a">
+                <div class="text-more" v-for="(info, b) in res.infos" :key="b">
                   <a href="javascript:;">
-                    <span>燃滤</span>
-                    <Toast></Toast>
-                  </a>
-                </div>
-              </div>
-              <div class="lab lab-5 bor">
-                <div class="text-more">
-                  <a href="javascript:;">
-                    <span>燃滤</span>
-                    <Toast></Toast>
-                  </a>
-                </div>
-              </div>
-              <div class="lab lab-6 bor">
-                <div class="text-more">
-                  <a href="javascript:;">
-                    <span>燃滤</span>
-                    <Toast></Toast>
-                  </a>
-                </div>
-                <div class="text-more">
-                  <a href="javascript:;">
-                    <span>燃滤</span>
-                    <Toast></Toast>
-                  </a>
-                </div>
-                <div class="text-more">
-                  <a href="javascript:;">
-                    <span>燃滤</span>
-                    <Toast></Toast>
-                  </a>
-                </div>
-              </div>
-              <div class="lab lab-7 bor">
-                <div class="text-more">
-                  <a href="javascript:;">
-                    <span>燃滤</span>
-                    <Toast></Toast>
+                    <span>{{info.code}}</span>
+                    <!-- <Toast></Toast> -->
                   </a>
                 </div>
               </div>
@@ -90,10 +51,10 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import searchView from '@/components/searchView'
 import matchingParts from '@/components/matchingParts'
 import Toast from '@/components/toast'
+import {mapGetters} from 'vuex'
 export default {
   name: 'home',
   components: {
@@ -103,14 +64,82 @@ export default {
   },
   data () {
     return {
+      brand: null,
+      car: null,
+      serie: null,
+      engine: null,
+      carInfos: [],
+      cars: {}
     }
+  },
+  created () {
+    this.engine = this.$route.query.engine || null
+    this.brand = this.$route.query.brand || null
+    this.car = this.$route.query.car || null
+    this.serie = this.$route.query.serie || null
+    if (this.brand === null || this.car === null || this.serie === null || this.engine === null) {
+      this.$router.back()
+    } else {
+      this._getMatchProduct()
+    }
+  },
+  watch: {
+    '$route': function (to, from) {
+      this.engine = to.query.engine || null
+      this.brand = to.query.brand || null
+      this.car = to.query.car || null
+      this.serie = to.query.serie || null
+      this._getMatchProduct()
+    }
+  },
+  computed: {
+    proclass () {
+      let arr = []
+      this.carInfos.forEach(item => {
+        let goods = []
+        this.nowClassify.goodsCates.forEach((res) => {
+          item.goodsInfo.forEach(good => {
+            if (res.title === good.name) {
+              goods.push(good)
+            }
+          })
+        })
+        arr.push(Object.assign(item, {
+          goodsInfo: goods
+        }))
+      })
+      return arr
+    },
+    ...mapGetters([
+      'nowClassify'
+    ])
   },
   methods: {
     getSearchInfo (res) {
-      this.$router.push('/searchcode?classify=' + 2 + '&query=' + res)
+      this.$router.push('/searchcode?query=' + res)
     },
     goMatchProduct (res) {
-      this.$router.push('/searchmodal?classify=' + 2 + '&type=' + 1 + '&brandid=' + 2 + '&serieid' + 3 + '&engine=' + 4)
+      this.$router.push('/searchmodal?car=' + res.car + '&brand=' + res.brand + '&serie=' + res.serie + '&engine=' + res.engine)
+    },
+    _getMatchProduct () {
+      this.api_post('/api/website/carTypeLists', (res) => {
+        if (res.data.code === 0) {
+          this.carInfos = res.data.data.carInfos
+          this.cars = {
+            id: res.data.data.brandId,
+            name: res.data.data.brandName,
+            img: res.data.data.brandLogo
+          }
+        }
+      }, {
+        cateId: this.nowClassify.id,
+        type: this.car,
+        serieId: this.serie,
+        brandId: this.brand,
+        engine: this.engine,
+        page: 1,
+        limit: 100
+      })
     }
   }
 }
@@ -203,16 +232,17 @@ export default {
               .lab
                 display: flex
                 flex-direction: column
+              .lab-title
                 justify-content: center
               .lab-1
-                flex: 1
+                width: 160px
               .lab-2
                 width: 75px
               .lab-3
                 width: 114px
-              .lab-4, .lab-5, .lab-6, .lab-7
+              .lab-con
                 box-sizing: border-box
-                width: 120px
+                flex: 1
                 padding: 10px 0px
               .bor
                 text-decoration: underline

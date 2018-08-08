@@ -33,6 +33,9 @@ const router = new Router({
     }, {
       path: '/searchcode',
       component: searchCode
+    }, {
+      path: '*',
+      component: home
     }
   ]
 })

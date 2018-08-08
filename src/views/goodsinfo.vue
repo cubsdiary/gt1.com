@@ -18,7 +18,10 @@
             <img src="big-img" alt="">
           </div>
           <ul class="mini-img-list">
-            <li class="mini-img">
+            <li class="mini-img" v-for="(item, index) in imgs" :key="index">
+              <img :src="imgUrl + item" alt="">
+            </li>
+            <!-- <li class="mini-img">
               <img src="" alt="">
             </li>
             <li class="mini-img">
@@ -29,10 +32,7 @@
             </li>
             <li class="mini-img">
               <img src="" alt="">
-            </li>
-            <li class="mini-img">
-              <img src="" alt="">
-            </li>
+            </li> -->
           </ul>
         </div>
         <div class="info-right">
@@ -190,6 +190,7 @@
 <script>
 import searchView from '@/components/searchView'
 import Collapse from '@/components/collapse'
+import {mapGetters} from 'vuex'
 export default {
   components: {
     searchView,
@@ -198,7 +199,8 @@ export default {
   data () {
     return {
       showType1: false,
-      data: [0, 1, 2, 3, 4],
+      goodsInfo: [],
+      imgs: '',
       showType2: false,
       showType3: false
     }
@@ -206,12 +208,27 @@ export default {
   created () {
     this.getGoodsInfo(this.$route.query.goodsid)
   },
+  computed: {
+    // goodsImgs () {
+    //   let arr = this.goodsInfo.imgs
+    //   console.log(arr.split(','))
+    //   return []
+    // }
+    ...mapGetters([
+      'nowClassify'
+    ])
+  },
   methods: {
     getGoodsInfo (id) {
       this.api_post('/api/website/getGoodInfo', (res) => {
+        if (res.data.code === 0) {
+          this.goodsInfo = res.data.data
+          this.imgs = res.data.data.imgs.split(',')
+        }
         console.log(res)
       }, {
-        goodId: id
+        goodId: id,
+        pcateId: this.nowClassify.id
       })
     },
     toggleClick (index) {

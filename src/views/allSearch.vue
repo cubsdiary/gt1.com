@@ -3,7 +3,7 @@
     <div class="home-content">
       <div class="template-title">
         <div class="title-bg"></div>
-        <div class="title">滤清器搜索</div>
+        <div class="title">{{nowClassify.title}}搜索</div>
       </div>
       <searchView @search="getSearchInfo"></searchView>
       <div class="template-title car-bar">
@@ -71,7 +71,7 @@ export default {
       return arr
     },
     ...mapGetters([
-      'classifyId'
+      'nowClassify'
     ])
   },
   methods: {
@@ -90,7 +90,7 @@ export default {
       this.$router.push('/searchcode?query=' + res)
     },
     goMatchProduct (res) {
-      this.$router.push('/searchmodal?&type=' + 1 + '&brandid=' + 2 + '&serieid' + 3 + '&engine=' + 4)
+      this.$router.push('/searchmodal?car=' + res.car + '&brand=' + res.brand + '&serie=' + res.serie + '&engine=' + res.engine)
     }
   }
 }

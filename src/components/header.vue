@@ -25,7 +25,7 @@
 import {mapActions, mapGetters} from 'vuex'
 export default {
   created () {
-    if (!this.classify) {
+    if (this.classify.length === 0) {
       this.getClassify()
     }
   },
