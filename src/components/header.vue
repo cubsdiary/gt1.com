@@ -39,7 +39,7 @@ export default {
     getClassify () {
       this.api_post('/api/website/goodsCateList', (res) => {
         if (res.errorCode === 0) {
-          this.saveClassifySession(res.data)
+          this.saveClassifySession(res.data.data)
         }
       })
     },
@@ -59,10 +59,12 @@ export default {
   ul
     list-style: none
   .header
+    position: relative
     width: 100%
     height: 100px
     box-shadow: 0px 2px 4px rgba(150, 150, 150, .2)
     user-select: none
+    z-index: 100
     .header-con
       width: 1200px
       height: 100%

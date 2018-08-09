@@ -29,7 +29,7 @@
                 <h3>
                   <a href="javascript:;" @click="goGoodsInfo(item)">
                     <span>{{item.code}}</span>
-                    <Toast :direction="'right'" :left="'auto'" :img="item.img"></Toast>
+                    <Toast :direction="'auto-left'" :img="item.img"></Toast>
                   </a>
                 </h3>
                 <h3>{{item.name}}</h3>

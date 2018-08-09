@@ -1,9 +1,9 @@
 <template>
   <div class="slider" ref="slider" :style="{width: width}">
     <div class="slider-group" ref="sliderGroup" @transitionend="transitionEnd" :style="{transform: translate3d, transitionDuration: animateTime + 'ms'}">
-      <div v-for="(item, index) in imgs" :key="index">
+      <div v-for="(item, index) in imgs" :key="index" :class="">
         <a :href="item.focusUrl">
-          <img :src="imgUrl + item.focusImg" alt="">
+          <img :src="item.focusImg" alt="">
         </a>
       </div>
     </div>
@@ -159,10 +159,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="stylus">
   .slider
+    position: relative
     float: right
     height: 100%
     overflow: hidden
     .pagination
+      position: absolute
+      left: 0
+      bottom: 20px
       width: 100%
       height: 30px
       display: flex
@@ -177,7 +181,7 @@ export default {
         &.dots-active
           opacity: 0.6
     .slider-group
-      height: 313px
+      height: 100%
       width: 100%
       display: flex
       & > div

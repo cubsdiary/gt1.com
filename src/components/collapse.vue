@@ -12,57 +12,18 @@
         <h3 class="lab lab-1">车型</h3>
         <h3 class="lab lab-2">排量</h3>
         <h3 class="lab lab-3">年限</h3>
-        <h3 class="lab lab-4">机滤</h3>
-        <h3 class="lab lab-5">空滤(空气)</h3>
-        <h3 class="lab lab-6">燃滤</h3>
-        <h3 class="lab lab-7">空调滤</h3>
+        <h3 class="lab lab-con" v-for="(item, index) in nowClassify.goodsCates" :key="index">{{item.title}}</h3>
         <h3 class="lab lab-8"></h3>
       </li>
-      <li class="car-modal" v-for="item in data" :key="item" ref="modalList">
-        <div class="lab lab-1"><span>车型</span></div>
-        <div class="lab lab-2"><span>排量</span></div>
-        <div class="lab lab-3"><span>年限</span></div>
-        <div class="lab lab-4 bor">
-          <div class="text-more">
-            <a href="javascript:;">
-              <span>燃滤</span>
-              <Toast></Toast>
-            </a>
-          </div>
-        </div>
-        <div class="lab lab-5 bor">
-          <div class="text-more">
-            <a href="javascript:;">
-              <span>燃滤</span>
-              <Toast></Toast>
-            </a>
-          </div>
-        </div>
-        <div class="lab lab-6 bor">
-          <div class="text-more">
-            <a href="javascript:;">
-              <span>燃滤</span>
-              <Toast></Toast>
-            </a>
-          </div>
-          <div class="text-more">
-            <a href="javascript:;">
-              <span>燃滤</span>
-              <Toast></Toast>
-            </a>
-          </div>
-          <div class="text-more">
-            <a href="javascript:;">
-              <span>燃滤</span>
-              <Toast></Toast>
-            </a>
-          </div>
-        </div>
-        <div class="lab lab-7 bor">
-          <div class="text-more">
-            <a href="javascript:;">
-              <span>燃滤</span>
-              <Toast></Toast>
+      <li class="car-modal" v-for="(item, index) in proclass" :key="index" ref="modalList">
+        <div class="lab lab-1"><span>{{item.carSerie}}</span></div>
+        <div class="lab lab-2"><span>{{item.carEngine}}</span></div>
+        <div class="lab lab-3"><span>{{item.carYear}}</span></div>
+        <div class="lab lab-con bor" v-for="(res, id) in item.goodsInfo" :key="id">
+          <div class="text-more" v-for="(info, is) in res.infos" :key="is">
+            <a href="javascript:;" @click="toggleGoodsInfo(info.id)">
+              <span>{{info.code}}</span>
+              <Toast :img="info.img" :direction="'auto-right'"></Toast>
             </a>
           </div>
         </div>
@@ -82,6 +43,7 @@
 <script>
 import Toast from '@/components/toast'
 import clickToast from '@/components/clickToast'
+import {mapGetters} from 'vuex'
 export default {
   components: {
     Toast,
@@ -99,17 +61,33 @@ export default {
       default: false
     }
   },
+  computed: {
+    proclass () {
+      let arr = []
+      this.data.forEach(item => {
+        let goods = []
+        this.nowClassify.goodsCates.forEach((res) => {
+          item.goodsInfo.forEach(good => {
+            if (res.title === good.name) {
+              goods.push(good)
+            }
+          })
+        })
+        arr.push(Object.assign(item, {
+          goodsInfo: goods
+        }))
+      })
+      return arr
+    },
+    ...mapGetters([
+      'nowClassify'
+    ])
+  },
   methods: {
     beforeEnter (el) {
-      // if (!this.transition) {
-      //   return
-      // }
       el.style.height = 0 + 'px'
     },
     enter (el, done) {
-      // if (!this.transition) {
-      //   return
-      // }
       let allHeight = 0
       this.$refs.modalList.forEach((item, index) => {
         allHeight += item.offsetHeight
@@ -120,31 +98,24 @@ export default {
       }, 300)
     },
     afterEnter (el) {
-      // if (!this.transition) {
-      //   return
-      // }
       el.style.overflow = 'visible'
     },
     beforeLeave (el) {
-      // if (!this.transition) {
-      //   return
-      // }
       el.style.overflow = 'hidden'
     },
     leave (el, done) {
-      // if (!this.transition) {
-      //   return
-      // }
       el.style.height = 0 + 'px'
       setTimeout(() => {
         done()
       }, 300)
     },
     afterLeave (el) {
-      // if (!this.transition) {
-      //   return
-      // }
       el.style.overflow = 'hidden'
+    },
+    toggleGoodsInfo (id) {
+      if (id !== this.$route.query.goodsid) {
+        this.$router.push('/goodsinfo?goodsid=' + id)
+      }
     }
   }
 }
@@ -166,6 +137,8 @@ export default {
         height: 38px
         background-color: #525252
         color: #fff
+        .lab-con
+          justify-content: center
         h3
           font-size: 16px
       &:nth-child(2n+1)
@@ -173,19 +146,23 @@ export default {
       .lab
         display: flex
         flex-direction: column
-        justify-content: center
       .lab-1
-        flex: 1
+        width: 200px
       .lab-2
         width: 100px
       .lab-3
-        flex: 1
-      .lab-4, .lab-5, .lab-6, .lab-7
+        width: 200px
+      .lab-con
+        width: 140px
         box-sizing: border-box
         width: 126px
         padding: 10px 0px
       .lab-8
-        width: 90px
+        flex: 1
+        justify-content: center
+        .text-more
+          text-align: right
+          padding-right: 27px
       .bor
         text-decoration: underline
         .text-more

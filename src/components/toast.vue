@@ -1,6 +1,6 @@
 <template>
-  <div class="toast-info" :class="left ? left : direction">
-    <div class="box-s" :class="{'left': direction === 'right', 'right': direction === 'left'}"></div>
+  <div class="toast-info" :class="direction">
+    <div class="box-s" :class="isLeft ? 'left' : 'right'"></div>
     <img class="img-info" :src="imgUrl + img"/>
   </div>
 </template>
@@ -12,13 +12,16 @@ export default {
       type: String,
       default: 'left'
     },
-    left: {
-      type: String,
-      default: ''
-    },
     img: {
       type: String,
       required: true
+    }
+  },
+  computed: {
+    isLeft () {
+      if (this.direction.indexOf('left') > -1) {
+        return true
+      }
     }
   }
 }
@@ -35,8 +38,10 @@ export default {
     -webkit-box-shadow: 0 0px 20px #ead8d8
     border-radius: 5px
     z-index: 100
-    &.auto
+    &.auto-left
       left: 120%
+    &.auto-right
+      right: 110%
     &.right
       left: 140px
     &.left

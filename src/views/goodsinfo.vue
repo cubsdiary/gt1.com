@@ -1,7 +1,7 @@
 <template>
   <div class="goodsinfo-container">
     <div class="goodsinfo-content">
-      <searchView />
+      <searchView @search="getSearchInfo" v-model="query"/>
       <div class="navigation">
         <div class="left">
           <div class="title">搜索列表</div>
@@ -14,25 +14,13 @@
       <div class="goodsinfo-tab1">
         <div class="info-left">
           <div class="img-show">
-            <h2>T0-SD6720KK</h2>
-            <img src="big-img" alt="">
+            <h2>{{goodsInfo.code}}</h2>
+            <img :src="imgUrl + imgs[imgsIndex]" alt="">
           </div>
           <ul class="mini-img-list">
-            <li class="mini-img" v-for="(item, index) in imgs" :key="index">
+            <li class="mini-img" :class="{active: index === imgsIndex}" v-for="(item, index) in imgs" :key="index" @click="switchImgs(index)">
               <img :src="imgUrl + item" alt="">
             </li>
-            <!-- <li class="mini-img">
-              <img src="" alt="">
-            </li>
-            <li class="mini-img">
-              <img src="" alt="">
-            </li>
-            <li class="mini-img">
-              <img src="" alt="">
-            </li>
-            <li class="mini-img">
-              <img src="" alt="">
-            </li> -->
           </ul>
         </div>
         <div class="info-right">
@@ -86,33 +74,9 @@
             <h4>型号</h4>
           </div>
           <ul>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">GT1</div>
-            </li>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">机油滤清器</div>
-            </li>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">小型轿车/皮卡/摩托</div>
-            </li>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">124mm</div>
-            </li>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">90ooKM</div>
-            </li>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">124mm</div>
-            </li>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">90ooKM</div>
+            <li v-for="(item, index) in goodsInfo.applicables" :key="index">
+              <div class="li-title">{{item.name}}</div>
+              <div class="li-info">{{item.factoryCode}}</div>
             </li>
           </ul>
         </div>
@@ -122,33 +86,9 @@
             <h4>型号</h4>
           </div>
           <ul>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">GT1</div>
-            </li>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">机油滤清器</div>
-            </li>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">小型轿车/皮卡/摩托</div>
-            </li>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">124mm</div>
-            </li>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">90ooKM</div>
-            </li>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">124mm</div>
-            </li>
-            <li>
-              <div class="li-title">类别</div>
-              <div class="li-info">90ooKM</div>
+            <li v-for="(item, index) in goodsInfo.relateds" :key="index">
+              <div class="li-title">{{item.name}}</div>
+              <div class="li-info">{{item.productCode}}</div>
             </li>
           </ul>
         </div>
@@ -158,29 +98,15 @@
         <i class="icon-font-1"></i>
       </div>
       <ul class="goodsinfo-tab3">
-        <li class="car-brand">
+        <li class="car-brand" v-for="(item, index) in carGoods" :key="index">
           <div class="car-title">
-            <img src="" alt="">
-            <span>丰田 TOYUTA</span>
-            <a href="javascript:;" @click="toggleClick(0)">收起</a>
+            <img :src="imgUrl + item.brandLogo" alt="">
+            <span>{{item.brandName}}</span>
+            <a href="javascript:;" @click="toggleClick(0)">
+              <i class="icon" :class="{'translate': showType1}"></i>
+              <span>收起</span></a>
           </div>
-          <Collapse v-if="showType1" :data="data"></Collapse>
-        </li>
-        <li class="car-brand">
-          <div class="car-title">
-            <img src="" alt="">
-            <span>丰田 TOYUTA</span>
-            <a href="javascript:;" @click="toggleClick(1)">收起</a>
-          </div>
-          <Collapse v-if="showType2" :data="data"></Collapse>
-        </li>
-        <li class="car-brand">
-          <div class="car-title">
-            <img src="" alt="">
-            <span>丰田 TOYUTA</span>
-            <a href="javascript:;" @click="toggleClick(2)">收起</a>
-          </div>
-          <Collapse v-if="showType3" :data="data"></Collapse>
+          <Collapse v-show="showType1" :data="item.carInfos"></Collapse>
         </li>
       </ul>
     </div>
@@ -201,19 +127,21 @@ export default {
       showType1: false,
       goodsInfo: [],
       imgs: '',
-      showType2: false,
-      showType3: false
+      imgsIndex: 0,
+      carGoods: null,
+      query: null
+    }
+  },
+  watch: {
+    '$route': function (to, from) {
+      console.log('我变了', to.query)
+      this.getGoodsInfo(to.query.goodsid)
     }
   },
   created () {
     this.getGoodsInfo(this.$route.query.goodsid)
   },
   computed: {
-    // goodsImgs () {
-    //   let arr = this.goodsInfo.imgs
-    //   console.log(arr.split(','))
-    //   return []
-    // }
     ...mapGetters([
       'nowClassify'
     ])
@@ -224,12 +152,16 @@ export default {
         if (res.data.code === 0) {
           this.goodsInfo = res.data.data
           this.imgs = res.data.data.imgs.split(',')
+          this.carGoods = res.data.data.carGoods
         }
         console.log(res)
       }, {
         goodId: id,
         pcateId: this.nowClassify.id
       })
+    },
+    getSearchInfo (res) {
+      this.$router.push('/searchcode?query=' + res)
     },
     toggleClick (index) {
       if (index === 0) {
@@ -239,6 +171,9 @@ export default {
       } else if (index === 2) {
         this.showType3 = !this.showType3
       }
+    },
+    switchImgs (index) {
+      this.imgsIndex = index
     }
   }
 }
@@ -304,6 +239,7 @@ export default {
           .img-show
             position: relative
             width: 480px
+            overflow: hidden
             h2
               position: absolute
               top: 0
@@ -314,10 +250,11 @@ export default {
               color: #434343
               font-weight: bolder
               text-align: center
-            .big-img
+            img
               display: block
-              height: auto
-              width: 100%
+              height: 100%
+              width: auto
+              margin: 0 auto
           .mini-img-list
             flex: 1
             display: flex
@@ -329,8 +266,10 @@ export default {
               width: 70px
               height: 70px
               margin: 5px 0
-              border: 1px solid #ff6b3e
+              border: 1px solid #525252
               cursor: pointer
+              &.active
+                border: 1px solid #ff6b3e
               img
                 display: block
                 width: 100%
@@ -488,13 +427,21 @@ export default {
               font-size: 16px
               color :#4e4e4e
               font-weight: bold
+              line-height: normal
             a
-              padding-left: 26px
               color: #aaaaaa
               font-size: 14px
               text-decoration: none
-              background-image: url('../assets/icon.png')
-              background-position: -200px -196px
-              background-repeat: no-repeat
+              .icon
+                display: inline-block
+                background-image: url('../assets/icon.png')
+                background-position: -200px -196px
+                background-repeat: no-repeat
+                width: 20px
+                height: 14px
+                transform-origin: center center
+                transition: all .3s
+                &.translate
+                  transform: rotate(-180deg) translateY(-4px)
 
 </style>

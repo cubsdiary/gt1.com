@@ -24,5 +24,5 @@ export default{
   box-sizing: border-box
   min-height: 100%
   width: 100%
-  padding-bottom: 200px
+  padding-bottom: 300px
 </style>

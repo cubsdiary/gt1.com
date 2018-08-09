@@ -12,7 +12,7 @@
       </div>
       <div class="banner-content">
         <matchingParts @match="goMatchProduct"/>
-        <Banner :recommends="bannerImgs" v-if="bannerImgs"></Banner>
+        <Banner :recommends="bannerImgs" v-if="bannerImgs" :width="'855px'"></Banner>
       </div>
       <div class="template-title font">
         <div class="title-bg"></div>
@@ -47,7 +47,9 @@ export default {
     return {
       imgUrlPath: null,
       recommends: null,
-      bannerImgs: null
+      bannerImgs: null,
+      swiper: null,
+      bulletIndex: 0
     }
   },
   created () {
@@ -55,7 +57,6 @@ export default {
   },
   watch: {
     '$route': function (to, from) {
-      console.log('我变了', to)
       this.getData(to.params.classify)
     }
   },
@@ -79,8 +80,8 @@ export default {
       let _self = this
       this.api_post('/api/website/cateSelectGoods', (res) => {
         if (res.errorCode === 0) {
-          _self.bannerImgs = res.data.cateImgs
-          _self.recommends = res.data.goods
+          _self.bannerImgs = res.data.data.cateImgs
+          _self.recommends = res.data.data.goods
         }
       }, {
         id: id
@@ -126,9 +127,39 @@ export default {
           font-weight: bold
           line-height: 24px
       .banner-content
-        display: flex
         width: 100%
         height: 343px
+        .swiper-container
+          float: right
+          width: 855px
+          margin-left: 45px
+          height: 100%
+          background: rgba(0, 0, 0, .24)
+          .color1
+            background-color: red
+          .color2
+            background-color: blue
+          .color0
+            background-color: yellow
+          img
+            display: block
+            width: 100%
+            height: 100%
+            object-fit: cover
+        //   .swiper-pagination
+        //     height: 5px
+        //     width: 100%
+        //     display: flex
+        //     justify-content: center
+        //     .pagination-bullet
+        //       display: inline-block
+        //       width: 100px
+        //       height: 5px
+        //       margin: 0 5px
+        //       background-color: rgba(0, 0, 0, .2)
+        //       cursor: pointer
+        //     .pagination-bullet-active
+        //       background-color: rgba(0, 0, 0, .5)
       .hot-parts
         width: 100%
         overflow: hidden

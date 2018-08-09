@@ -38,7 +38,7 @@
                 <div class="text-more" v-for="(info, b) in res.infos" :key="b">
                   <a href="javascript:;">
                     <span>{{info.code}}</span>
-                    <!-- <Toast></Toast> -->
+                    <Toast :direction="'auto-right'" :img="info.img"></Toast>
                   </a>
                 </div>
               </div>
