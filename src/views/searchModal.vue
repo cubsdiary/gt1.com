@@ -36,7 +36,7 @@
               <div class="lab lab-3"><span>{{item.carYear}}</span></div>
               <div class="lab lab-con bor" v-for="(res, a) in item.goodsInfo" :key="a">
                 <div class="text-more" v-for="(info, b) in res.infos" :key="b">
-                  <a href="javascript:;">
+                  <a href="javascript:;" @click="goodsInfo(info.id)">
                     <span>{{info.code}}</span>
                     <Toast :direction="'auto-right'" :img="info.img"></Toast>
                   </a>
@@ -120,6 +120,9 @@ export default {
     },
     goMatchProduct (res) {
       this.$router.push('/searchmodal?car=' + res.car + '&brand=' + res.brand + '&serie=' + res.serie + '&engine=' + res.engine)
+    },
+    goodsInfo (id) {
+      this.$router.push('/goodsinfo?goodsid=' + id)
     },
     _getMatchProduct () {
       this.api_post('/api/website/carTypeLists', (res) => {

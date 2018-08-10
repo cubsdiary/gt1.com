@@ -1,7 +1,7 @@
 <template>
   <div class="slider" ref="slider" :style="{width: width}">
     <div class="slider-group" ref="sliderGroup" @transitionend="transitionEnd" :style="{transform: translate3d, transitionDuration: animateTime + 'ms'}">
-      <div v-for="(item, index) in imgs" :key="index" :class="">
+      <div v-for="(item, index) in imgs" :key="index" >
         <a :href="item.focusUrl">
           <img :src="item.focusImg" alt="">
         </a>
@@ -135,6 +135,9 @@ export default {
     },
     /*      初始化设置        */
     init () {
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
       this.sliderDom = this.$refs.slider.offsetWidth
       this.goBackImg(0)
       this.player()
@@ -152,6 +155,13 @@ export default {
   },
   mounted () {
     this.init()
+  },
+  watch: {
+    recommends () {
+      setTimeout(() => {
+        this.init()
+      }, 20)
+    }
   }
 }
 </script>

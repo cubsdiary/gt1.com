@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="banner-container" :style="{height: height + 'px'}">
-      <Banner :recommends="bannerImgs" v-if="bannerImgs"></Banner>
+      <Banner :recommends="bannerImgs" v-if="bannerImgs" ref="banner"></Banner>
     </div>
   </div>
 </template>
@@ -34,7 +34,13 @@ export default {
   },
   created () {
     this.height = (document.documentElement.clientHeight || document.body.clientHeight) - 100
-    console.log(this.height)
+  },
+  mounted () {
+    let that = this
+    window.onresize = () => {
+      that.height = (document.documentElement.clientHeight || document.body.clientHeight) - 100
+      this.$refs.banner.init()
+    }
   }
 }
 </script>
