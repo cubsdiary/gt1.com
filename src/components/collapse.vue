@@ -29,10 +29,10 @@
         </div>
         <div class="lab lab-8 bor">
           <div class="text-more">
-            <a href="javascript:;">
+            <!-- <a href="javascript:;">
               <span>其他配件</span>
               <clickToast></clickToast>
-            </a>
+            </a> -->
           </div>
         </div>
       </li>
@@ -114,7 +114,7 @@ export default {
     },
     toggleGoodsInfo (id) {
       if (id !== this.$route.query.goodsid) {
-        this.$router.push('/goodsinfo?goodsid=' + id)
+        this.$router.push('/goodsinfo/' + id)
       }
     }
   }
@@ -124,7 +124,7 @@ export default {
 <style scoped lang="stylus">
   .connect-modal
     width: 100%
-    overflow: hidden
+    // overflow: hidden
     .car-modal
       display: flex
       box-sizing: border-box
@@ -153,9 +153,8 @@ export default {
       .lab-3
         width: 200px
       .lab-con
-        width: 140px
+        width: 160px
         box-sizing: border-box
-        width: 126px
         padding: 10px 0px
       .lab-8
         flex: 1

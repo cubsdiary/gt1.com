@@ -26,13 +26,13 @@
           <ul class="connect-modal">
             <li class="car-modal" id="car-modal-title">
               <h3 class="lab lab-1">车型</h3>
-              <h3 class="lab lab-2">排量</h3>
+              <!-- <h3 class="lab lab-2">排量</h3> -->
               <h3 class="lab lab-3">年限</h3>
               <h3 class="lab lab-con lab-title" v-for="item in nowClassify.goodsCates" :key="item.id">{{item.title}}</h3>
             </li>
             <li class="car-modal" v-for="(item, c) in proclass" :key="c" ref="modalList">
-              <div class="lab lab-1"><span>{{item.carSerie}}</span></div>
-              <div class="lab lab-2"><span>{{item.carEngine}}</span></div>
+              <div class="lab lab-1"><span>{{item.typeName}}</span></div>
+              <!-- <div class="lab lab-2"><span>{{item.carEngine}}</span></div> -->
               <div class="lab lab-3"><span>{{item.carYear}}</span></div>
               <div class="lab lab-con bor" v-for="(res, a) in item.goodsInfo" :key="a">
                 <div class="text-more" v-for="(info, b) in res.infos" :key="b">
@@ -108,6 +108,7 @@ export default {
           goodsInfo: goods
         }))
       })
+      console.log(arr)
       return arr
     },
     ...mapGetters([
@@ -116,13 +117,13 @@ export default {
   },
   methods: {
     getSearchInfo (res) {
-      this.$router.push('/searchcode?query=' + res)
+      this.$router.push('/searchcode/' + res)
     },
     goMatchProduct (res) {
       this.$router.push('/searchmodal?car=' + res.car + '&brand=' + res.brand + '&serie=' + res.serie + '&engine=' + res.engine)
     },
     goodsInfo (id) {
-      this.$router.push('/goodsinfo?goodsid=' + id)
+      this.$router.push('/goodsinfo/' + id)
     },
     _getMatchProduct () {
       this.api_post('/api/website/carTypeLists', (res) => {
@@ -238,11 +239,11 @@ export default {
               .lab-title
                 justify-content: center
               .lab-1
-                width: 160px
+                width: 320px
               .lab-2
                 width: 75px
               .lab-3
-                width: 114px
+                width: 90px
               .lab-con
                 box-sizing: border-box
                 flex: 1

@@ -15,13 +15,13 @@
 export default {
   data () {
     return {
-      data: [0, 1, 2, 3, 4, 5, 6]
+      data: [0, 1, 2, 3, 4, 5, 6, 7]
     }
   },
   computed: {
     showWidth () {
-      let index = this.data.length > 5 ? 5 : this.data.length
-      return index * 180 + 20 + 'px'
+      let index = this.data.length > 3 ? 3 : this.data.length
+      return index * 120 + 20 + 'px'
     }
   },
   methods: {
@@ -59,14 +59,14 @@ export default {
       border-style: solid
       border-color: transparent transparent transparent #fff
     .other-list
-      min-width: 180px
+      min-width: 120px
       overflow: hidden
       margin: 0 auto
       margin-top: 10px
       li
         display: inline-block
-        width: 180px
-        height: 180px
+        width: 120px
+        height: 120px
         img
           display: block
           width: 100%

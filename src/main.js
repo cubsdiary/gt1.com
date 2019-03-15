@@ -12,11 +12,10 @@ import '@/common/api'
 Vue.config.productionTip = false
 Vue.use(Vueaxios, axios)
 Vue.use(iView)
-// axios.defaults.baseURL = 'https://www.gt1.shop/'
-axios.defaults.baseURL = 'http://192.168.0.113:8080/gt/'
+axios.defaults.baseURL = ''
 Vue.prototype.baseUrl = axios.defaults.baseURL
 
-Vue.prototype.imgUrl = 'http://192.168.0.113:8080/gt/download?id='
+Vue.prototype.imgUrl = ''
 
 new Vue({
   router,

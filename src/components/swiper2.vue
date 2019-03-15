@@ -171,6 +171,7 @@ export default {
   .slider
     position: relative
     float: right
+    min-width: 1200px
     height: 100%
     overflow: hidden
     .pagination
@@ -192,17 +193,23 @@ export default {
           opacity: 0.6
     .slider-group
       height: 100%
-      width: 100%
+      min-width: 1200px
       display: flex
       & > div
         display: flex
         align-items:center
         justify-content: center
         width: 100%
+        height: 100%
         flex-shrink: 0
         z-index: 10
         overflow: hidden
         a
+          display: inline-block
+          width: 100%
+          height: 100%
+          overflow: hidden
+          resize: both
           overflow: hidden
           img
             width: 100%

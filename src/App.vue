@@ -5,6 +5,7 @@
     <vFooter/>
   </div>
 </template>
+
 <script>
 import vHeader from '@/components/header'
 import vFooter from '@/components/footer'

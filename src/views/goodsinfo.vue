@@ -8,7 +8,7 @@
           <i class="icon"></i>
         </div>
         <div class="right">
-          <a href="#">订购站点：www.QTYCY.shop.com</a>
+          <a href="#">订购站点：www.gt1shop.com</a>
         </div>
       </div>
       <div class="goodsinfo-tab1">
@@ -26,70 +26,48 @@
         <div class="info-right">
           <div class="info-title">参数详情</div>
           <ul>
-            <li>
-              <div class="li-title">类别：</div>
-              <div class="li-info">GT1</div>
-            </li>
-            <li>
-              <div class="li-title">类别：</div>
-              <div class="li-info">机油滤清器</div>
-            </li>
-            <li>
-              <div class="li-title">类别：</div>
-              <div class="li-info">小型轿车/皮卡/摩托</div>
-            </li>
-            <li>
-              <div class="li-title">类别：</div>
-              <div class="li-info">124mm</div>
-            </li>
-            <li>
-              <div class="li-title">类别：</div>
-              <div class="li-info">90ooKM</div>
-            </li>
-            <li>
-              <div class="li-title">类别：</div>
-              <div class="li-info">124mm</div>
-            </li>
-            <li>
-              <div class="li-title">类别：</div>
-              <div class="li-info">90ooKM</div>
+            <li v-for="(item, index) in goodsType" :key="index">
+              <div class="li-title">{{item.title}}:</div>
+              <div class="li-info">{{item.value}}</div>
             </li>
           </ul>
         </div>
       </div>
       <div class="tab2-title">
         <div class="left-title">
-          <span>产品对应号</span>
+          <span>产品原厂号</span>
           <i class="icon-font-1"></i>
         </div>
         <div class="right-title">
-          <span>适配车型</span>
+          <span>相关品牌对标</span>
           <i class="icon-font-1"></i>
         </div>
       </div>
       <div class="goodsinfo-tab2">
         <div class="info-left">
           <div class="info-title">
-            <h3>品牌号</h3>
-            <h4>型号</h4>
+            <h3>车厂</h3>
+            <h4>OEM码</h4>
           </div>
           <ul>
             <li v-for="(item, index) in goodsInfo.applicables" :key="index">
               <div class="li-title">{{item.name}}</div>
               <div class="li-info">{{item.factoryCode}}</div>
             </li>
+            <li v-if="!goodsInfo.applicables">暂无</li>
           </ul>
         </div>
         <div class="info-right">
           <div class="info-title">
-            <h3>适配车型</h3>
-            <h4>型号</h4>
+            <h3>品牌</h3>
+            <h4>编号</h4>
           </div>
           <ul>
             <li v-for="(item, index) in goodsInfo.relateds" :key="index">
               <div class="li-title">{{item.name}}</div>
               <div class="li-info">{{item.productCode}}</div>
             </li>
+            <li v-if="!goodsInfo.relateds">暂无</li>
           </ul>
         </div>
       </div>
@@ -97,16 +75,21 @@
         <span>车型匹配</span>
         <i class="icon-font-1"></i>
       </div>
-      <ul class="goodsinfo-tab3">
+      <ul class="goodsinfo-tab3" v-if="carGoods">
         <li class="car-brand" v-for="(item, index) in carGoods" :key="index">
           <div class="car-title">
             <img :src="imgUrl + item.brandLogo" alt="">
             <span>{{item.brandName}}</span>
-            <a href="javascript:;" @click="toggleClick(0)">
-              <i class="icon" :class="{'translate': showType1}"></i>
+            <a href="javascript:;" @click="toggleClick(index)">
+              <i class="icon" :class="{'translate': showType}"></i>
               <span>收起</span></a>
           </div>
-          <Collapse v-show="showType1" :data="item.carInfos"></Collapse>
+          <Collapse v-show="showType === index" :data="item.carInfos" :key="index"></Collapse>
+        </li>
+        <li class="car-brand" v-if="!carGoods.length">
+          <div class="car-title">
+            <span>暂无</span>
+          </div>
         </li>
       </ul>
     </div>
@@ -116,30 +99,37 @@
 <script>
 import searchView from '@/components/searchView'
 import Collapse from '@/components/collapse'
+import {createJiYouLv, createKongTiaoLv, createKongLv, createLvQinQi, createMachineOil} from '@/common/config'
 import {mapGetters} from 'vuex'
 export default {
   components: {
     searchView,
     Collapse
   },
+  props: {
+    goodsid: {
+      type: Number,
+      required: true
+    }
+  },
   data () {
     return {
-      showType1: false,
+      showType: -1,
       goodsInfo: [],
       imgs: '',
       imgsIndex: 0,
       carGoods: null,
-      query: null
+      query: null,
+      goodsType: []
     }
   },
   watch: {
     '$route': function (to, from) {
-      console.log('我变了', to.query)
-      this.getGoodsInfo(to.query.goodsid)
+      this.getGoodsInfo(to.params.goodsid)
     }
   },
   created () {
-    this.getGoodsInfo(this.$route.query.goodsid)
+    this.getGoodsInfo(this.goodsid)
   },
   computed: {
     ...mapGetters([
@@ -148,29 +138,51 @@ export default {
   },
   methods: {
     getGoodsInfo (id) {
+      let that = this
       this.api_post('/api/website/getGoodInfo', (res) => {
         if (res.data.code === 0) {
-          this.goodsInfo = res.data.data
+          that.goodsInfo = res.data.data
           this.imgs = res.data.data.imgs.split(',')
-          this.carGoods = res.data.data.carGoods
+          this.carGoods = res.data.data.carGoods || []
+          this.goodsType = this.handleTypes(res.data.data).getGoodsParameter()
         }
-        console.log(res)
       }, {
         goodId: id,
         pcateId: this.nowClassify.id
       })
     },
     getSearchInfo (res) {
-      this.$router.push('/searchcode?query=' + res)
+      this.$router.push('/searchcode/' + res)
+    },
+    handleTypes (data) {
+      console.log(data)
+      if (/^TYO/.test(data.code)) {
+        console.log(createMachineOil(data))
+        return createMachineOil(data)
+      } else if (/^TOE-/.test(data.code)) {
+        return createKongLv(data)
+      } else if (/空调/.test(data.cateName)) {
+        return createKongTiaoLv(data)
+      } else if (/空气/.test(data.cateName)) {
+        if (data.diameter && data.innerDiameter) {
+          return createKongLv(data)
+        } else if (data.length && data.breadth) {
+          return createKongTiaoLv(data)
+        } else {
+          return createLvQinQi(data)
+        }
+      } else if (/机油/.test(data.cateName)) {
+        return createJiYouLv(data)
+      } else {
+        return createLvQinQi(data)
+      }
     },
     toggleClick (index) {
-      if (index === 0) {
-        this.showType1 = !this.showType1
-      } else if (index === 1) {
-        this.showType2 = !this.showType2
-      } else if (index === 2) {
-        this.showType3 = !this.showType3
+      if (index === this.showType) {
+        this.showType = -1
+        return
       }
+      this.showType = index
     },
     switchImgs (index) {
       this.imgsIndex = index
@@ -408,7 +420,8 @@ export default {
         margin-bottom: 100px
         .car-brand
           width: 100%
-          margin-bottom: 5px
+          // overflow: hidden
+          margin-top: 10px
           .car-title
             box-sizing: border-box
             display: flex

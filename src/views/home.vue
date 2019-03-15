@@ -39,11 +39,13 @@ export default {
     let that = this
     window.onresize = () => {
       that.height = (document.documentElement.clientHeight || document.body.clientHeight) - 100
-      this.$refs.banner.init()
+      that.$children[0].init()
     }
   }
 }
 </script>
 
 <style scoped lang="stylus">
+  .banner-container
+    min-width: 1200px
 </style>

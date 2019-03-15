@@ -3,7 +3,7 @@
     <ul ref="cycleList" :style="scrollType ? 'width:' + scrollSize + 'px' : 'height:' + scrollSize + 'px'">
       <li ref="cycleItem" v-for="(item, index) in dataArray" :key="index">
         <div class="content">
-          <img :src="imgUrl + item.goodImg" alt="" @click="selectHotImg(item)">
+          <img :src="imgUrl + item.goodImg" alt="" @click.stop="selectHotImg(item)">
         </div>
       </li>
     </ul>
@@ -70,7 +70,7 @@ export default {
       this.getDom()
     },
     selectHotImg (item) {
-      console.log(item)
+      this.$router.push('/goodsinfo/' + item.goodId)
     },
     getDom () {
       this.cycleRollDom = this.$refs.cycleRoll
@@ -167,6 +167,7 @@ export default {
           width: 220px
           height: 136px
           img
+            object-fit: cover
             display: block
             width: auto
             height: 100%

@@ -1,8 +1,8 @@
 <template>
   <div class="search-view">
     <div class="search">
-      <input type="text" v-model="search" placeholder="请输入GT1号或关键字" class="search-input">
-      <button type="button" name="button" class="search-btn" @click="goSearch">搜索</button>
+      <input type="text" v-model="search" placeholder="请输入GT1号/原厂号/对标型号" class="search-input" @keyup.enter="goSearch">
+      <button type="button" name="button" class="search-btn" @click="goSearch" >搜索</button>
     </div>
   </div>
 </template>

@@ -160,7 +160,7 @@ export default {
 <style scoped lang="stylus">
   .slider
     float: right
-    height: 100%
+    height: 343px
     overflow: hidden
     .pagination
       width: 100%

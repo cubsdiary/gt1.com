@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import store from '@/store'
 import * as types from '../store/mutation-types'
 import home from '../views/home.vue'
-import aboutus from '../views/aboutus.vue'
+// import aboutus from '../views/aboutus.vue'
 import allSearch from '../views/allSearch.vue'
 import goodsInfo from '../views/goodsinfo.vue'
 import searchCode from '../views/searchCode.vue'
@@ -17,20 +17,26 @@ const routers = [
     path: '/home',
     component: home
   }, {
-    path: '/aboutus',
-    component: aboutus
-  }, {
     path: '/allsearch/:classify',
     name: 'allSearch',
+    props: route => ({
+      id: parseInt(route.params.classify)
+    }),
     component: allSearch
   }, {
-    path: '/goodsinfo',
+    path: '/goodsinfo/:goodsid',
+    props: route => ({
+      goodsid: parseInt(route.params.goodsid)
+    }),
     component: goodsInfo
   }, {
     path: '/searchmodal',
     component: searchModal
   }, {
-    path: '/searchcode',
+    path: '/searchcode/:code',
+    props: route => ({
+      code: route.params.code
+    }),
     component: searchCode
   }, {
     path: '*',

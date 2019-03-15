@@ -1,24 +1,15 @@
 <template>
   <div class="home-container">
     <div class="home-content">
-      <div class="template-title height-80">
-        <div class="title-bg"></div>
-        <div class="title">{{nowClassify.title}}搜索</div>
-      </div>
+      <titleBar :title="nowClassify.title + '搜索'"></titleBar>
       <searchView @search="getSearchInfo" v-model="query"></searchView>
-      <div class="template-bar">
-        <div class="template-title bar1 height-90">
-          <div class="title-bg"></div>
-          <div class="title">车型匹配配件</div>
-        </div>
-        <div class="template-title bar2 height-90">
-          <div class="title-bg"></div>
-          <div class="title">搜索结果</div>
-        </div>
-      </div>
       <div class="banner-content">
-        <matchingParts @match="goMatchProduct"/>
+        <div class="left-con" v-if="nowClassify.id !== 4">
+          <titleBar :title="'车型匹配配件'" :height="90" :font="20"></titleBar>
+          <matchingParts @match="goMatchProduct"/>
+        </div>
         <div class="search-resule">
+          <titleBar :title="'搜索结果'" :height="90" :font="20"></titleBar>
           <div class="search-title">
             <h3>GT1号</h3>
             <h3>配件类型</h3>
@@ -34,10 +25,16 @@
                 </h3>
                 <h3>{{item.name}}</h3>
               </div>
-              <div class="search-other search-box" v-if="item.apps">
+              <div class="search-other" v-if="item.relatedBrands && item.relatedBrands.length">
                 <h3>对标型号</h3>
                 <ul class="other">
-                  <li v-for="(res, index) in item.apps" :key="index"><h3><span @click="goGoodsInfo(item)">{{res}}</span></h3></li>
+                  <li v-for="(res, index) in item.relatedBrands" :key="index"><h3><span @click="goGoodsInfo(item)">{{res}}</span></h3></li>
+                </ul>
+              </div>
+              <div class="search-other" v-if="item.applicableModels && item.applicableModels.length">
+                <h3>原厂号</h3>
+                <ul class="other">
+                  <li v-for="(res, index) in item.applicableModels" :key="index"><h3><span @click="goGoodsInfo(item)">{{res}}</span></h3></li>
                 </ul>
               </div>
             </li>
@@ -53,13 +50,21 @@
 import searchView from '@/components/searchView'
 import matchingParts from '@/components/matchingParts'
 import Toast from '@/components/toast'
+import titleBar from '@/components/titleBar'
 import {mapGetters} from 'vuex'
 export default {
   name: 'home',
   components: {
     searchView,
     matchingParts,
+    titleBar,
     Toast
+  },
+  props: {
+    code: {
+      type: String,
+      required: true
+    }
   },
   data () {
     return {
@@ -69,13 +74,12 @@ export default {
   },
   watch: {
     '$route': function (to, from) {
-      console.log('我变了', to)
-      this.searchData(to.query.query, this.nowClassify.id)
+      this.searchData(to.params.code, this.nowClassify.id)
     }
   },
   created () {
-    this.query = this.$route.query.query
-    this.searchData(this.$route.query.query, this.nowClassify.id)
+    this.query = this.code
+    this.searchData(this.code, this.nowClassify.id)
   },
   computed: {
     ...mapGetters([
@@ -84,15 +88,14 @@ export default {
   },
   methods: {
     getSearchInfo (res) {
-      this.$router.push('/searchcode?query=' + res)
+      this.$router.push('/searchcode/' + res)
     },
     goGoodsInfo (item) {
-      this.$router.push('/goodsinfo?goodsid=' + item.id)
+      this.$router.push('/goodsinfo/' + item.id)
     },
     searchData (query, id) {
       this.api_post('/api/website/goodsLists', (res) => {
         if (res.errorCode === 0) {
-          console.log(res.data)
           this.showDatas = res.data
         }
       }, {
@@ -119,28 +122,6 @@ export default {
       overflow: hidden
       padding-top: 15px
       margin: 0 auto
-      .template-title
-        box-sizing: border-box
-        display: flex
-        align-items: flex-end
-        width: 100%
-        padding-bottom: 30px
-        &.height-80
-          height: 80px
-        &.height-90
-          height: 90px
-        &.font
-          font-size: 20px
-        .title-bg
-          width: 8px
-          height: 15px
-          background-color: #ff853b
-          margin-right: 22px
-        .title
-          font-size: 24px
-          color: #505050
-          font-weight: bold
-          line-height: 24px
       .template-bar
         display: flex
         width: 100%
@@ -152,12 +133,15 @@ export default {
           flex: 1
           margin-left: 45px
       .banner-content
+        display: flex
         width: 100%
         overflow: hidden
         padding-bottom: 150px
+        .left-con
+          width: 300px
+          margin-right: 45px
         .search-resule
-          width: 855px
-          float: right
+          flex: 1
           .search-title
             display: flex
             width: 100%
@@ -185,7 +169,6 @@ export default {
                 min-height: 40px
                 padding-left: 30px
                 line-height: 40px
-
                 &.black
                   color: #646464
                 &.white
@@ -207,18 +190,26 @@ export default {
                 flex: 1
                 font-size: 16px
               .search-other
+                display: flex
+                box-sizing: border-box
+                width: 100%
+                min-height: 30px
+                padding-left: 30px
+                line-height: 30px
                 background-color: #b5b5b6
                 color: #fff
+                height: 30px
+                line-height: 30px
               .search-other > h3
                 width: 100px
                 font-size: 16px
               .other
                 flex: 1
-                min-height: 40px
+                min-height: 30px
                 & > li
                   display: inline-block
                   box-sizing: border-box
-                  padding: 7px 20px
+                  padding: 0px 20px
                   & > h3
                     font-size: 16px
                     cursor: pointer

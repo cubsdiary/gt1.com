@@ -37,7 +37,7 @@ export default {
     background-color: #fff
     -webkit-box-shadow: 0 0px 20px #ead8d8
     border-radius: 5px
-    z-index: 100
+    z-index: 99999
     &.auto-left
       left: 120%
     &.auto-right

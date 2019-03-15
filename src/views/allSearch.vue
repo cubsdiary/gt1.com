@@ -1,25 +1,18 @@
 <template>
   <div class="home-container">
-    <div class="home-content">
-      <div class="template-title">
-        <div class="title-bg"></div>
-        <div class="title">{{nowClassify.title}}搜索</div>
-      </div>
+    <div class="home-content" v-if="recommends">
+      <titleBar :title="nowClassify.title + '搜索'" :font="24"></titleBar>
       <searchView @search="getSearchInfo"></searchView>
-      <div class="template-title car-bar">
-        <div class="title-bg"></div>
-        <div class="title">车型匹配配件</div>
+      <div :class="`banner-content ${id === 4 ? 'center' : ''}`" :style="{marginBottom: recommends.length ? '' : '80px'}">
+        <div class="left-con" v-if="id !== 4">
+          <titleBar :title="'车型匹配配件'" :height="90" :font="20"></titleBar>
+          <matchingParts @match="goMatchProduct"/>
+        </div>
+        <Banner :recommends="bannerImgs" v-if="bannerImgs.length" :width="'855px'"></Banner>
       </div>
-      <div class="banner-content">
-        <matchingParts @match="goMatchProduct"/>
-        <Banner :recommends="bannerImgs" v-if="bannerImgs" :width="'855px'"></Banner>
-      </div>
-      <div class="template-title font">
-        <div class="title-bg"></div>
-        <div class="title">热门配件</div>
-      </div>
-      <div class="hot-parts">
-        <div class="" v-for="(item, index) in recommendData" :key="index">
+      <div class="hot-parts" v-if="recommends.length">
+        <titleBar :title="'热门配件'" :height="90" :font="20"></titleBar>
+        <div class="" v-for="(item, index) in recommends" :key="index">
           <div class="hot-title">{{item.name}}</div>
           <cycleRolling :data="item.data"/>
         </div>
@@ -32,6 +25,7 @@
 import searchView from '@/components/searchView'
 import cycleRolling from '@/components/cycleRolling'
 import matchingParts from '@/components/matchingParts'
+import titleBar from '@/components/titleBar'
 import Banner from '@/components/swiper'
 import {mapGetters} from 'vuex'
 
@@ -41,7 +35,8 @@ export default {
     searchView,
     cycleRolling,
     matchingParts,
-    Banner
+    Banner,
+    titleBar
   },
   data () {
     return {
@@ -52,43 +47,51 @@ export default {
       bulletIndex: 0
     }
   },
+  props: {
+    id: {
+      type: Number,
+      required: true
+    }
+  },
   created () {
-    this.getData(this.$route.params.classify)
+    this.getData(this.id)
   },
   watch: {
-    '$route': function (to, from) {
-      this.getData(to.params.classify)
+    '$route': function (newRouter, oldRouter) {
+      this.getData(newRouter.params.classify)
     }
   },
   computed: {
-    recommendData () {
-      let arr = []
-      for (let key in this.recommends) {
-        arr.push({
-          name: key,
-          data: this.recommends[key]
-        })
-      }
-      return arr
-    },
     ...mapGetters([
       'nowClassify'
     ])
   },
   methods: {
     getData (id) {
+      this.bannerImgs = null
+      this.recommends = null
       let _self = this
       this.api_post('/api/website/cateSelectGoods', (res) => {
         if (res.errorCode === 0) {
-          _self.bannerImgs = res.data.data.cateImgs
-          _self.recommends = res.data.data.goods
+          _self.bannerImgs = res.data.data.cateImgs || ['asdfasf']
+          _self.recommends = this.recommendData(res.data.data.goods)
         }
       }, {
         id: id
       })
     },
+    recommendData (data) {
+      let arr = []
+      for (let key in data) {
+        arr.push({
+          name: key,
+          data: data[key]
+        })
+      }
+      return arr
+    },
     getSearchInfo (res) {
-      this.$router.push('/searchcode?query=' + res)
+      this.$router.push('/searchcode/' + res)
     },
     goMatchProduct (res) {
       this.$router.push('/searchmodal?car=' + res.car + '&brand=' + res.brand + '&serie=' + res.serie + '&engine=' + res.engine)
@@ -105,63 +108,20 @@ export default {
       overflow: hidden
       padding-top: 15px
       margin: 0 auto
-      .template-title
-        box-sizing: border-box
+      .banner-content
         display: flex
         align-items: flex-end
+        justify-content: space-between
         width: 100%
-        height: 80px
-        padding-bottom: 30px
-        &.font
-          font-size: 20px
-        &.car-bar
-          height: 90px
-        .title-bg
-          width: 8px
-          height: 15px
-          background-color: #ff853b
-          margin-right: 22px
-        .title
-          font-size: 24px
-          color: #505050
-          font-weight: bold
-          line-height: 24px
-      .banner-content
-        width: 100%
-        height: 343px
-        .swiper-container
-          float: right
-          width: 855px
-          margin-left: 45px
-          height: 100%
-          background: rgba(0, 0, 0, .24)
-          .color1
-            background-color: red
-          .color2
-            background-color: blue
-          .color0
-            background-color: yellow
-          img
-            display: block
-            width: 100%
-            height: 100%
-            object-fit: cover
-        //   .swiper-pagination
-        //     height: 5px
-        //     width: 100%
-        //     display: flex
-        //     justify-content: center
-        //     .pagination-bullet
-        //       display: inline-block
-        //       width: 100px
-        //       height: 5px
-        //       margin: 0 5px
-        //       background-color: rgba(0, 0, 0, .2)
-        //       cursor: pointer
-        //     .pagination-bullet-active
-        //       background-color: rgba(0, 0, 0, .5)
+        height: 433px
+        overflow: hidden
+        .left-con
+          width: 300px
+          margin-right: 45px
+        &.center
+          justify-content: center
       .hot-parts
-        width: 100%
+        flex: 1
         overflow: hidden
         .hot-title
           box-sizing: border-box

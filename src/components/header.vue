@@ -17,7 +17,7 @@
             </div>
           </a>
         </li>
-        <li><router-link to="/aboutus">关于GT1</router-link></li>
+        <!-- <li><router-link to="/aboutus">关于GT1</router-link></li> -->
       </ul>
     </div>
   </div>
